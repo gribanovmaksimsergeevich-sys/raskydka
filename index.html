@@ -98,7 +98,7 @@
 
   <script>
     // ⚠️ ВСТАВЬТЕ СЮДА ВАШ URL ИЗ GOOGLE APPS SCRIPT!
-    const API_URL = "https://script.google.com/macros/s/AKfycbw8xIJxuI2zORFyZycZ-jdO67PeQLxb6gNp-7DR1sYyWorOSba7xFu5jcHlXIConZsd/exec";
+    const API_URL = "ВАШ_WEB_APP_URL_ИЗ_APPS_SCRIPT";
 
     let housesData = [];
     let activeHouse = null;
@@ -262,3 +262,20 @@
   </script>
 </body>
 </html>
+4. Файл manifest.json для превращения в PWA
+Создайте в репозитории рядом с index.html файл manifest.json:
+{
+  "name": "ТТК Адреска",
+  "short_name": "ТТК Адреска",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0c4a6e",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2991/2991231.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
