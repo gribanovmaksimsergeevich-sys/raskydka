@@ -2,19 +2,26 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ТТК Адреска</title>
+  
+  <!-- Мета-теги для покраски шторки смартфона -->
+  <meta name="theme-color" content="#0c4a6e">
+  <meta name="msapplication-navbutton-color" content="#0c4a6e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <link rel="manifest" href="manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 min-h-screen text-slate-800 pb-20">
 
   <!-- Шапка -->
-  <header class="bg-blue-900 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
-    <h1 class="font-bold text-lg">🚀 ТТК Адреска</h1>
+  <header class="bg-sky-900 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
+    <h1 class="font-bold text-lg flex items-center gap-1.5">🚀 ТТК Адреска</h1>
     <div class="flex gap-2">
-      <button onclick="switchTab('main')" id="tabBtnMain" class="bg-blue-800 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-600">Дома</button>
-      <button onclick="switchTab('stats')" id="tabBtnStats" class="bg-blue-950 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-800 opacity-70">📊 Статистика</button>
+      <button onclick="switchTab('main')" id="tabBtnMain" class="bg-sky-700 text-xs px-3 py-1.5 rounded-lg font-bold border border-sky-500">Дома</button>
+      <button onclick="switchTab('stats')" id="tabBtnStats" class="bg-sky-950 text-xs px-3 py-1.5 rounded-lg font-bold border border-sky-800 opacity-70">📊 Статистика</button>
     </div>
   </header>
 
@@ -26,7 +33,7 @@
         <input type="text" id="agentNameInput" placeholder="Ваша фамилия (Агент)" class="w-full p-2 border rounded-lg text-sm bg-yellow-50 font-bold" onchange="saveAgentName()">
         <div class="flex gap-2">
           <input type="text" id="searchInput" placeholder="🔍 Поиск улицы или дома..." class="w-full p-2 border rounded-lg text-sm" oninput="renderHouses()">
-          <button onclick="loadData()" class="bg-slate-200 px-3 rounded-lg text-xs font-bold">🔄</button>
+          <button onclick="loadData()" class="bg-slate-200 px-3 rounded-lg text-xs font-bold active:scale-95 transition">🔄</button>
         </div>
       </div>
 
@@ -90,7 +97,7 @@
         </div>
       </div>
 
-      <!-- Карточки за выбранный месяц -->
+      <!-- Карточки за месяц -->
       <div class="grid grid-cols-2 gap-3 text-center">
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
           <div id="statHouses" class="text-2xl font-black text-blue-600">0</div>
@@ -156,8 +163,13 @@
   </div>
 
   <script>
-    // ⚠️ СЮДА ВСТАВЬ СВОЮ ССЫЛКУ ИЗ APPS SCRIPT
-    const API_URL = "https://script.google.com/macros/s/AKfycbw8xIJxuI2zORFyZycZ-jdO67PeQLxb6gNp-7DR1sYyWorOSba7xFu5jcHlXIConZsd/exec";
+    // Регистрация Service Worker для PWA установки
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
+    }
+
+    // ⚠️ ВСТАВЬ СВОЙ URL APPS SCRIPT
+    const API_URL = "ВАШ_WEB_APP_URL_ИЗ_APPS_SCRIPT";
 
     let housesData = [];
     let activeHouse = null;
@@ -195,12 +207,10 @@
           localStorage.setItem('ttk_houses_cache', JSON.stringify(housesData));
           renderHouses();
           updateBaseSummary();
-        } else {
-          showError('Не удалось загрузить данные с сервера');
         }
       } catch (e) {
         if (housesData.length === 0) {
-          showError('Ошибка подключения к Google Скрипту. Проверьте Web App URL или права доступа (Должно быть "Anyone / Все").');
+          showError('Ошибка загрузки данных');
         }
       }
     }
@@ -286,13 +296,13 @@
       if (tab === 'main') {
         document.getElementById('mainTab').classList.remove('hidden');
         document.getElementById('statsTab').classList.add('hidden');
-        document.getElementById('tabBtnMain').className = "bg-blue-800 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-600";
-        document.getElementById('tabBtnStats').className = "bg-blue-950 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-800 opacity-70";
+        document.getElementById('tabBtnMain').className = "bg-sky-700 text-xs px-3 py-1.5 rounded-lg font-bold border border-sky-500";
+        document.getElementById('tabBtnStats').className = "bg-sky-950 text-xs px-3 py-1.5 rounded-lg font-bold border border-sky-800 opacity-70";
       } else {
         document.getElementById('mainTab').classList.add('hidden');
         document.getElementById('statsTab').classList.remove('hidden');
-        document.getElementById('tabBtnMain').className = "bg-blue-950 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-800 opacity-70";
-        document.getElementById('tabBtnStats').className = "bg-blue-800 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-600";
+        document.getElementById('tabBtnMain').className = "bg-sky-950 text-xs px-3 py-1.5 rounded-lg font-bold border border-sky-800 opacity-70";
+        document.getElementById('tabBtnStats').className = "bg-sky-700 text-xs px-3 py-1.5 rounded-lg font-bold border border-sky-500";
         updateBaseSummary();
         loadStats();
       }
