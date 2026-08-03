@@ -24,7 +24,10 @@
     <section id="mainTab" class="space-y-4">
       <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 space-y-2">
         <input type="text" id="agentNameInput" placeholder="Ваша фамилия (Агент)" class="w-full p-2 border rounded-lg text-sm bg-yellow-50 font-bold" onchange="saveAgentName()">
-        <input type="text" id="searchInput" placeholder="🔍 Поиск улицы или дома..." class="w-full p-2 border rounded-lg text-sm" oninput="renderHouses()">
+        <div class="flex gap-2">
+          <input type="text" id="searchInput" placeholder="🔍 Поиск улицы или дома..." class="w-full p-2 border rounded-lg text-sm" oninput="renderHouses()">
+          <button onclick="loadData()" class="bg-slate-200 px-3 rounded-lg text-xs font-bold">🔄</button>
+        </div>
       </div>
 
       <!-- Список домов -->
@@ -153,7 +156,7 @@
   </div>
 
   <script>
-    // ⚠️ ВСТАВЬТЕ СЮДА СВОЙ URL ИЗ GOOGLE APPS SCRIPT
+    // ⚠️ СЮДА ВСТАВЬ СВОЮ ССЫЛКУ ИЗ APPS SCRIPT
     const API_URL = "ВАШ_WEB_APP_URL_ИЗ_APPS_SCRIPT";
 
     let housesData = [];
@@ -174,26 +177,36 @@
     function init() {
       const cached = localStorage.getItem('ttk_houses_cache');
       if (cached) {
-        housesData = JSON.parse(cached);
-        renderHouses();
-        updateBaseSummary();
+        try {
+          housesData = JSON.parse(cached);
+          renderHouses();
+          updateBaseSummary();
+        } catch(e) {}
       }
       loadData();
     }
 
     async function loadData() {
       try {
-        const res = await fetch(`${API_URL}?action=getData`);
+        const res = await fetch(`${API_URL}?action=getData`, { redirect: "follow" });
         const json = await res.json();
         if (json.status === 'success') {
           housesData = json.houses;
           localStorage.setItem('ttk_houses_cache', JSON.stringify(housesData));
           renderHouses();
           updateBaseSummary();
+        } else {
+          showError('Не удалось загрузить данные с сервера');
         }
       } catch (e) {
-        console.log('Работа в кэш-режиме');
+        if (housesData.length === 0) {
+          showError('Ошибка подключения к Google Скрипту. Проверьте Web App URL или права доступа (Должно быть "Anyone / Все").');
+        }
       }
+    }
+
+    function showError(msg) {
+      document.getElementById('houseList').innerHTML = `<div class="bg-red-50 text-red-600 p-4 rounded-xl text-xs text-center border border-red-200">${msg}</div>`;
     }
 
     function updateBaseSummary() {
@@ -229,7 +242,8 @@
       container.innerHTML = '';
 
       const filtered = housesData.filter(h => 
-        h.street.toLowerCase().includes(query) || h.house.toString().includes(query)
+        (h.street && h.street.toLowerCase().includes(query)) || 
+        (h.house && h.house.toString().includes(query))
       );
 
       if (filtered.length === 0) {
@@ -291,7 +305,7 @@
       document.getElementById('monthLeadsList').innerHTML = '<div class="text-center text-slate-400 py-4">Загрузка...</div>';
 
       try {
-        const res = await fetch(`${API_URL}?action=getStats&month=${selectedMonth}`);
+        const res = await fetch(`${API_URL}?action=getStats&month=${selectedMonth}`, { redirect: "follow" });
         const json = await res.json();
         if (json.status === 'success') {
           document.getElementById('statHouses').innerText = json.monthHousesCount;
@@ -315,7 +329,7 @@
           `).join('');
         }
       } catch (e) {
-        alert('Ошибка загрузки статистики');
+        document.getElementById('monthLeadsList').innerHTML = '<div class="text-center text-red-500 py-4">Ошибка загрузки статистики</div>';
       }
     }
 
@@ -351,6 +365,8 @@
 
       await fetch(API_URL, {
         method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'addFlyers',
           rowId: activeHouse.rowId,
@@ -360,7 +376,7 @@
           count: count
         })
       });
-      loadData();
+      setTimeout(loadData, 1500);
     }
 
     function selectLeadType(type) {
@@ -377,6 +393,8 @@
       closeModals();
       await fetch(API_URL, {
         method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'addLead',
           street: activeHouse.street,
@@ -386,7 +404,7 @@
           comment: comment
         })
       });
-      alert('Заявка зафиксирована!');
+      alert('Заявка отправлена!');
     }
 
     init();
