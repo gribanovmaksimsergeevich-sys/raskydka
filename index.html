@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ТТК Адреска & Заявки</title>
+  <link rel="manifest" href="manifest.json">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 pb-10">
+
+  <!-- Шапка -->
+  <header class="bg-blue-900 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
+    <h1 class="font-bold text-lg">🚀 ТТК: Активный Канал</h1>
+    <select id="userRole" class="bg-blue-800 text-xs px-2 py-1 rounded text-white border border-blue-600 outline-none" onchange="render()">
+      <option value="agent">📱 Агент</option>
+      <option value="sv">📊 Супервайзер (СВ)</option>
+    </select>
+  </header>
+
+  <main class="max-w-md mx-auto p-4">
+    
+    <!-- ВКЛАДКА АГЕНТА -->
+    <section id="agentView" class="space-y-4">
+      
+      <!-- Поиск и Фильтр -->
+      <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
+        <input type="text" id="searchInput" placeholder="🔍 Поиск улицы или дома..." class="w-full p-2 border rounded-lg text-sm mb-2" oninput="renderHouses()">
+        <input type="text" id="agentNameInput" placeholder="Ваша фамилия (Агент)" class="w-full p-2 border rounded-lg text-sm bg-yellow-50" value="Кондаков">
+      </div>
+
+      <!-- Список домов -->
+      <div id="houseList" class="space-y-3">
+        <div class="text-center text-slate-400 py-8">Загрузка адресной базы...</div>
+      </div>
+    </section>
+
+    <!-- ВКЛАДКА СУПЕРВАЙЗЕРА -->
+    <section id="svView" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <h2 class="font-bold text-slate-700 mb-2">Сводка по работе</h2>
+        <div class="grid grid-cols-2 gap-2 text-center">
+          <div class="bg-blue-50 p-3 rounded-lg">
+            <div id="statFlyers" class="text-2xl font-black text-blue-700">0</div>
+            <div class="text-xs text-slate-500">Раскидок выполнено</div>
+          </div>
+          <div class="bg-green-50 p-3 rounded-lg">
+            <div id="statLeads" class="text-2xl font-black text-green-700">0</div>
+            <div class="text-xs text-slate-500">Заявок собрано</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+        <h3 class="font-bold text-sm mb-3 text-slate-700">Последние заявки</h3>
+        <div id="leadsList" class="space-y-2 text-xs divide-y"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- МОДАЛЬНОЕ ОКНО: РАСКИДКА -->
+  <div id="flyerModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-2xl p-5 space-y-4 animate-fade-in">
+      <h3 class="font-bold text-lg" id="modalHouseTitle">Отметить раскидку</h3>
+      <div>
+        <label class="text-xs font-semibold text-slate-500">Количество листовок:</label>
+        <input type="number" id="flyerCountInput" class="w-full p-3 border rounded-xl mt-1 text-lg font-bold text-center" value="30">
+      </div>
+      <div class="flex gap-2">
+        <button onclick="closeModals()" class="w-1/2 py-3 bg-slate-100 text-slate-600 font-semibold rounded-xl">Отмена</button>
+        <button onclick="submitFlyers()" class="w-1/2 py-3 bg-blue-600 text-white font-semibold rounded-xl">Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- МОДАЛЬНОЕ ОКНО: ЗАЯВКА -->
+  <div id="leadModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
+    <div class="bg-white w-full max-w-sm rounded-2xl p-5 space-y-4">
+      <h3 class="font-bold text-lg" id="modalLeadHouseTitle">Новая заявка</h3>
+      <div>
+        <label class="text-xs font-semibold text-slate-500 mb-1 block">Тип услуги:</label>
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="selectLeadType('ШПД')" id="btnLeadSPD" class="py-2 border rounded-lg font-bold text-sm bg-blue-50 border-blue-500 text-blue-700">ШПД</button>
+          <button type="button" onclick="selectLeadType('Пакет')" id="btnLeadPkt" class="py-2 border rounded-lg font-bold text-sm border-slate-200">Пакет</button>
+        </div>
+      </div>
+      <div>
+        <label class="text-xs font-semibold text-slate-500">Квартира / Примечание:</label>
+        <input type="text" id="leadCommentInput" placeholder="кв. 12, перезвонить вечером" class="w-full p-2 border rounded-lg mt-1 text-sm">
+      </div>
+      <div class="flex gap-2">
+        <button onclick="closeModals()" class="w-1/2 py-3 bg-slate-100 text-slate-600 font-semibold rounded-xl">Отмена</button>
+        <button onclick="submitLead()" class="w-1/2 py-3 bg-green-600 text-white font-semibold rounded-xl">Отправить</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ ВСТАВЬТЕ СЮДА ВАШ URL ИЗ GOOGLE APPS SCRIPT!
+    const API_URL = "https://script.google.com/macros/s/AKfycbw8xIJxuI2zORFyZycZ-jdO67PeQLxb6gNp-7DR1sYyWorOSba7xFu5jcHlXIConZsd/exec";
+
+    let housesData = [];
+    let activeHouse = null;
+    let selectedLeadType = 'ШПД';
+
+    async function loadData() {
+      try {
+        const res = await fetch(`${API_URL}?action=getData`);
+        const json = await res.json();
+        if (json.status === 'success') {
+          housesData = json.houses;
+          renderHouses();
+        }
+      } catch (e) {
+        alert('Ошибка загрузки данных из Google Таблицы');
+      }
+    }
+
+    function renderHouses() {
+      const container = document.getElementById('houseList');
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      container.innerHTML = '';
+
+      const filtered = housesData.filter(h => 
+        h.street.toLowerCase().includes(query) || h.house.toString().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="text-center text-slate-400 py-6">Дома не найдены</div>';
+        return;
+      }
+
+      filtered.forEach(h => {
+        const card = document.createElement('div');
+        card.className = "bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between space-y-3";
+        
+        const isBlocked = h.isBlocked;
+        const statusBadge = isBlocked 
+          ? `<span class="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full font-medium">🔒 Блок: еще ${h.daysLeft} дн.</span>`
+          : `<span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">✅ Доступен</span>`;
+
+        card.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="font-bold text-slate-800">ул. ${h.street}, д. ${h.house}</div>
+              <div class="text-xs text-slate-400">План: ${h.plan} кв. | Неделя: ${h.week}</div>
+            </div>
+            ${statusBadge}
+          </div>
+
+          <div class="flex gap-2 border-t pt-2">
+            <button onclick="openFlyerModal(${h.rowId})" ${isBlocked ? 'disabled class="w-1/2 py-2 bg-slate-100 text-slate-400 rounded-lg text-xs font-bold cursor-not-allowed"' : 'class="w-1/2 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold shadow-sm active:scale-95 transition"'}>
+              📬 Раскидать
+            </button>
+            <button onclick="openLeadModal(${h.rowId})" class="w-1/2 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold shadow-sm active:scale-95 transition">
+              🎯 Заявка
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openFlyerModal(rowId) {
+      activeHouse = housesData.find(h => h.rowId === rowId);
+      document.getElementById('modalHouseTitle').innerText = `ул. ${activeHouse.street}, д. ${activeHouse.house}`;
+      document.getElementById('flyerCountInput').value = activeHouse.plan || 30;
+      document.getElementById('flyerModal').classList.remove('hidden');
+    }
+
+    function openLeadModal(rowId) {
+      activeHouse = housesData.find(h => h.rowId === rowId);
+      document.getElementById('modalLeadHouseTitle').innerText = `Заявка: ул. ${activeHouse.street}, д. ${activeHouse.house}`;
+      document.getElementById('leadModal').classList.remove('hidden');
+    }
+
+    function closeModals() {
+      document.getElementById('flyerModal').classList.add('hidden');
+      document.getElementById('leadModal').classList.add('hidden');
+    }
+
+    async function submitFlyers() {
+      const agent = document.getElementById('agentNameInput').value;
+      const count = document.getElementById('flyerCountInput').value;
+      if (!agent) return alert('Укажите имя агента!');
+
+      closeModals();
+      await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'addFlyers',
+          rowId: activeHouse.rowId,
+          street: activeHouse.street,
+          house: activeHouse.house,
+          agent: agent,
+          count: count
+        })
+      });
+      loadData();
+    }
+
+    function selectLeadType(type) {
+      selectedLeadType = type;
+      document.getElementById('btnLeadSPD').className = type === 'ШПД' ? 'py-2 border rounded-lg font-bold text-sm bg-blue-50 border-blue-500 text-blue-700' : 'py-2 border rounded-lg font-bold text-sm border-slate-200';
+      document.getElementById('btnLeadPkt').className = type === 'Пакет' ? 'py-2 border rounded-lg font-bold text-sm bg-blue-50 border-blue-500 text-blue-700' : 'py-2 border rounded-lg font-bold text-sm border-slate-200';
+    }
+
+    async function submitLead() {
+      const agent = document.getElementById('agentNameInput').value;
+      const comment = document.getElementById('leadCommentInput').value;
+      if (!agent) return alert('Укажите имя агента!');
+
+      closeModals();
+      await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'addLead',
+          street: activeHouse.street,
+          house: activeHouse.house,
+          agent: agent,
+          leadType: selectedLeadType,
+          comment: comment
+        })
+      });
+      alert('Заявка успешно зафиксирована!');
+    }
+
+    async function loadStats() {
+      const res = await fetch(`${API_URL}?action=getStats`);
+      const json = await res.json();
+      if (json.status === 'success') {
+        document.getElementById('statFlyers').innerText = json.historyCount;
+        document.getElementById('statLeads').innerText = json.leadsCount;
+        
+        const container = document.getElementById('leadsList');
+        container.innerHTML = json.leads.map(l => `
+          <div class="py-1.5 flex justify-between items-center">
+            <div>
+              <span class="font-bold text-slate-700">${l[2]}, д.${l[3]}</span> (${l[5] || 'без коммент'})
+              <div class="text-[10px] text-slate-400">${l[1]} • ${l[0]}</div>
+            </div>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${l[4] === 'ШПД' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}">${l[4]}</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    function render() {
+      const role = document.getElementById('userRole').value;
+      if (role === 'agent') {
+        document.getElementById('agentView').classList.remove('hidden');
+        document.getElementById('svView').classList.add('hidden');
+      } else {
+        document.getElementById('agentView').classList.add('hidden');
+        document.getElementById('svView').classList.remove('hidden');
+        loadStats();
+      }
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
