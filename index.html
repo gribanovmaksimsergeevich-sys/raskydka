@@ -3,57 +3,113 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ТТК Адреска & Заявки</title>
+  <title>ТТК Адреска</title>
   <link rel="manifest" href="manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-100 min-h-screen text-slate-800 pb-10">
+<body class="bg-slate-100 min-h-screen text-slate-800 pb-20">
 
   <!-- Шапка -->
   <header class="bg-blue-900 text-white p-4 shadow-md sticky top-0 z-50 flex justify-between items-center">
-    <h1 class="font-bold text-lg">🚀 ТТК: Активный Канал</h1>
-    <select id="userRole" class="bg-blue-800 text-xs px-2 py-1 rounded text-white border border-blue-600 outline-none" onchange="render()">
-      <option value="agent">📱 Агент</option>
-      <option value="sv">📊 Супервайзер (СВ)</option>
-    </select>
+    <h1 class="font-bold text-lg">🚀 ТТК Адреска</h1>
+    <div class="flex gap-2">
+      <button onclick="switchTab('main')" id="tabBtnMain" class="bg-blue-800 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-600">Дома</button>
+      <button onclick="switchTab('stats')" id="tabBtnStats" class="bg-blue-950 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-800 opacity-70">📊 Статистика</button>
+    </div>
   </header>
 
   <main class="max-w-md mx-auto p-4">
     
-    <!-- ВКЛАДКА АГЕНТА -->
-    <section id="agentView" class="space-y-4">
-      
-      <!-- Поиск и Фильтр -->
-      <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200">
-        <input type="text" id="searchInput" placeholder="🔍 Поиск улицы или дома..." class="w-full p-2 border rounded-lg text-sm mb-2" oninput="renderHouses()">
-        <input type="text" id="agentNameInput" placeholder="Ваша фамилия (Агент)" class="w-full p-2 border rounded-lg text-sm bg-yellow-50" value="Кондаков">
+    <!-- ЭКРАН 1: РАБОТА С ДОМАМИ -->
+    <section id="mainTab" class="space-y-4">
+      <div class="bg-white p-3 rounded-xl shadow-sm border border-slate-200 space-y-2">
+        <input type="text" id="agentNameInput" placeholder="Ваша фамилия (Агент)" class="w-full p-2 border rounded-lg text-sm bg-yellow-50 font-bold" onchange="saveAgentName()">
+        <input type="text" id="searchInput" placeholder="🔍 Поиск улицы или дома..." class="w-full p-2 border rounded-lg text-sm" oninput="renderHouses()">
       </div>
 
       <!-- Список домов -->
       <div id="houseList" class="space-y-3">
-        <div class="text-center text-slate-400 py-8">Загрузка адресной базы...</div>
+        <div class="text-center text-slate-400 py-8">Загрузка адресов...</div>
       </div>
     </section>
 
-    <!-- ВКЛАДКА СУПЕРВАЙЗЕРА -->
-    <section id="svView" class="hidden space-y-4">
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-        <h2 class="font-bold text-slate-700 mb-2">Сводка по работе</h2>
-        <div class="grid grid-cols-2 gap-2 text-center">
-          <div class="bg-blue-50 p-3 rounded-lg">
-            <div id="statFlyers" class="text-2xl font-black text-blue-700">0</div>
-            <div class="text-xs text-slate-500">Раскидок выполнено</div>
+    <!-- ЭКРАН 2: СТАТИСТИКА И СВОДКА ПО АДРЕСКЕ -->
+    <section id="statsTab" class="hidden space-y-4">
+      
+      <!-- Сводка по адресной базе -->
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+        <h2 class="font-bold text-slate-700 text-sm border-b pb-2">🏠 Состояние адресного фонда</h2>
+        
+        <!-- Дома -->
+        <div>
+          <div class="text-xs text-slate-500 font-semibold mb-1">Дома:</div>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-slate-100 p-2 rounded-lg">
+              <div id="totalHouses" class="font-black text-slate-800 text-base">0</div>
+              <div class="text-[10px] text-slate-500">Всего</div>
+            </div>
+            <div class="bg-red-50 p-2 rounded-lg">
+              <div id="blockedHouses" class="font-black text-red-600 text-base">0</div>
+              <div class="text-[10px] text-red-500">Раскидано</div>
+            </div>
+            <div class="bg-green-50 p-2 rounded-lg">
+              <div id="freeHouses" class="font-black text-green-600 text-base">0</div>
+              <div class="text-[10px] text-green-600">Свободно</div>
+            </div>
           </div>
-          <div class="bg-green-50 p-3 rounded-lg">
-            <div id="statLeads" class="text-2xl font-black text-green-700">0</div>
-            <div class="text-xs text-slate-500">Заявок собрано</div>
+        </div>
+
+        <!-- Квартиры -->
+        <div>
+          <div class="text-xs text-slate-500 font-semibold mb-1">Квартиры (план):</div>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-slate-100 p-2 rounded-lg">
+              <div id="totalFlats" class="font-black text-slate-800 text-base">0</div>
+              <div class="text-[10px] text-slate-500">Всего</div>
+            </div>
+            <div class="bg-red-50 p-2 rounded-lg">
+              <div id="blockedFlats" class="font-black text-red-600 text-base">0</div>
+              <div class="text-[10px] text-red-500">Раскидано</div>
+            </div>
+            <div class="bg-green-50 p-2 rounded-lg">
+              <div id="freeFlats" class="font-black text-green-600 text-base">0</div>
+              <div class="text-[10px] text-green-600">Свободно</div>
+            </div>
           </div>
         </div>
       </div>
 
+      <!-- Фильтр по месяцу -->
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+        <div class="flex justify-between items-center">
+          <h2 class="font-bold text-slate-700 text-sm">Выбор месяца:</h2>
+          <input type="month" id="monthPicker" class="border rounded-lg p-1.5 text-xs bg-slate-50 font-bold" onchange="loadStats()">
+        </div>
+      </div>
+
+      <!-- Карточки за выбранный месяц -->
+      <div class="grid grid-cols-2 gap-3 text-center">
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+          <div id="statHouses" class="text-2xl font-black text-blue-600">0</div>
+          <div class="text-xs text-slate-500 mt-1">Раскидок за месяц</div>
+        </div>
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+          <div id="statFlyers" class="text-2xl font-black text-indigo-600">0</div>
+          <div class="text-xs text-slate-500 mt-1">Листовок за месяц</div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center">
+        <div id="statLeads" class="text-2xl font-black text-emerald-600">0</div>
+        <div class="text-xs text-slate-500 mt-1">Заявок за месяц</div>
+      </div>
+
+      <!-- Список заявок за месяц -->
       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-        <h3 class="font-bold text-sm mb-3 text-slate-700">Последние заявки</h3>
-        <div id="leadsList" class="space-y-2 text-xs divide-y"></div>
+        <h3 class="font-bold text-sm mb-3 text-slate-700">Заявки за выбранный месяц</h3>
+        <div id="monthLeadsList" class="space-y-2 text-xs divide-y">
+          <div class="text-center text-slate-400 py-4">Выберите месяц для загрузки</div>
+        </div>
       </div>
     </section>
 
@@ -61,7 +117,7 @@
 
   <!-- МОДАЛЬНОЕ ОКНО: РАСКИДКА -->
   <div id="flyerModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-4">
-    <div class="bg-white w-full max-w-sm rounded-2xl p-5 space-y-4 animate-fade-in">
+    <div class="bg-white w-full max-w-sm rounded-2xl p-5 space-y-4">
       <h3 class="font-bold text-lg" id="modalHouseTitle">Отметить раскидку</h3>
       <div>
         <label class="text-xs font-semibold text-slate-500">Количество листовок:</label>
@@ -87,22 +143,43 @@
       </div>
       <div>
         <label class="text-xs font-semibold text-slate-500">Квартира / Примечание:</label>
-        <input type="text" id="leadCommentInput" placeholder="кв. 12, перезвонить вечером" class="w-full p-2 border rounded-lg mt-1 text-sm">
+        <input type="text" id="leadCommentInput" placeholder="кв. 12" class="w-full p-2 border rounded-lg mt-1 text-sm">
       </div>
       <div class="flex gap-2">
         <button onclick="closeModals()" class="w-1/2 py-3 bg-slate-100 text-slate-600 font-semibold rounded-xl">Отмена</button>
-        <button onclick="submitLead()" class="w-1/2 py-3 bg-green-600 text-white font-semibold rounded-xl">Отправить</button>
+        <button onclick="submitLead()" class="w-1/2 py-3 bg-emerald-600 text-white font-semibold rounded-xl">Отправить</button>
       </div>
     </div>
   </div>
 
   <script>
-    // ⚠️ ВСТАВЬТЕ СЮДА ВАШ URL ИЗ GOOGLE APPS SCRIPT!
+    // ⚠️ ВСТАВЬТЕ СЮДА СВОЙ URL ИЗ GOOGLE APPS SCRIPT
     const API_URL = "ВАШ_WEB_APP_URL_ИЗ_APPS_SCRIPT";
 
     let housesData = [];
     let activeHouse = null;
     let selectedLeadType = 'ШПД';
+
+    const now = new Date();
+    document.getElementById('monthPicker').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+    if (localStorage.getItem('agentName')) {
+      document.getElementById('agentNameInput').value = localStorage.getItem('agentName');
+    }
+
+    function saveAgentName() {
+      localStorage.setItem('agentName', document.getElementById('agentNameInput').value);
+    }
+
+    function init() {
+      const cached = localStorage.getItem('ttk_houses_cache');
+      if (cached) {
+        housesData = JSON.parse(cached);
+        renderHouses();
+        updateBaseSummary();
+      }
+      loadData();
+    }
 
     async function loadData() {
       try {
@@ -110,11 +187,40 @@
         const json = await res.json();
         if (json.status === 'success') {
           housesData = json.houses;
+          localStorage.setItem('ttk_houses_cache', JSON.stringify(housesData));
           renderHouses();
+          updateBaseSummary();
         }
       } catch (e) {
-        alert('Ошибка загрузки данных из Google Таблицы');
+        console.log('Работа в кэш-режиме');
       }
+    }
+
+    function updateBaseSummary() {
+      let totalH = housesData.length;
+      let blockedH = housesData.filter(h => h.isBlocked).length;
+      let freeH = totalH - blockedH;
+
+      let totalF = 0;
+      let blockedF = 0;
+
+      housesData.forEach(h => {
+        let plan = Number(h.plan) || 0;
+        totalF += plan;
+        if (h.isBlocked) {
+          blockedF += plan;
+        }
+      });
+
+      let freeF = totalF - blockedF;
+
+      document.getElementById('totalHouses').innerText = totalH;
+      document.getElementById('blockedHouses').innerText = blockedH;
+      document.getElementById('freeHouses').innerText = freeH;
+
+      document.getElementById('totalFlats').innerText = totalF;
+      document.getElementById('blockedFlats').innerText = blockedF;
+      document.getElementById('freeFlats').innerText = freeF;
     }
 
     function renderHouses() {
@@ -137,29 +243,80 @@
         
         const isBlocked = h.isBlocked;
         const statusBadge = isBlocked 
-          ? `<span class="bg-red-100 text-red-700 text-xs px-2 py-0.5 rounded-full font-medium">🔒 Блок: еще ${h.daysLeft} дн.</span>`
-          : `<span class="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full font-medium">✅ Доступен</span>`;
+          ? `<span class="bg-red-100 text-red-700 text-xs px-2.5 py-1 rounded-full font-bold">🔒 Блок: еще ${h.daysLeft} дн.</span>`
+          : `<span class="bg-green-100 text-green-700 text-xs px-2.5 py-1 rounded-full font-bold">✅ Доступен</span>`;
 
         card.innerHTML = `
           <div class="flex justify-between items-start">
             <div>
-              <div class="font-bold text-slate-800">ул. ${h.street}, д. ${h.house}</div>
-              <div class="text-xs text-slate-400">План: ${h.plan} кв. | Неделя: ${h.week}</div>
+              <div class="font-bold text-slate-800 text-base">ул. ${h.street}, д. ${h.house}</div>
+              <div class="text-xs text-slate-400 mt-0.5">План: ${h.plan} кв. ${h.agent ? '| Агент: ' + h.agent : ''}</div>
             </div>
             ${statusBadge}
           </div>
 
           <div class="flex gap-2 border-t pt-2">
-            <button onclick="openFlyerModal(${h.rowId})" ${isBlocked ? 'disabled class="w-1/2 py-2 bg-slate-100 text-slate-400 rounded-lg text-xs font-bold cursor-not-allowed"' : 'class="w-1/2 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold shadow-sm active:scale-95 transition"'}>
+            <button onclick="openFlyerModal(${h.rowId})" ${isBlocked ? 'disabled class="w-1/2 py-2.5 bg-slate-100 text-slate-400 rounded-lg text-xs font-bold cursor-not-allowed"' : 'class="w-1/2 py-2.5 bg-blue-600 text-white rounded-lg text-xs font-bold shadow-sm active:scale-95 transition"'}>
               📬 Раскидать
             </button>
-            <button onclick="openLeadModal(${h.rowId})" class="w-1/2 py-2 bg-emerald-600 text-white rounded-lg text-xs font-bold shadow-sm active:scale-95 transition">
+            <button onclick="openLeadModal(${h.rowId})" class="w-1/2 py-2.5 bg-emerald-600 text-white rounded-lg text-xs font-bold shadow-sm active:scale-95 transition">
               🎯 Заявка
             </button>
           </div>
         `;
         container.appendChild(card);
       });
+    }
+
+    function switchTab(tab) {
+      if (tab === 'main') {
+        document.getElementById('mainTab').classList.remove('hidden');
+        document.getElementById('statsTab').classList.add('hidden');
+        document.getElementById('tabBtnMain').className = "bg-blue-800 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-600";
+        document.getElementById('tabBtnStats').className = "bg-blue-950 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-800 opacity-70";
+      } else {
+        document.getElementById('mainTab').classList.add('hidden');
+        document.getElementById('statsTab').classList.remove('hidden');
+        document.getElementById('tabBtnMain').className = "bg-blue-950 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-800 opacity-70";
+        document.getElementById('tabBtnStats').className = "bg-blue-800 text-xs px-3 py-1.5 rounded-lg font-bold border border-blue-600";
+        updateBaseSummary();
+        loadStats();
+      }
+    }
+
+    async function loadStats() {
+      const selectedMonth = document.getElementById('monthPicker').value;
+      if (!selectedMonth) return;
+
+      document.getElementById('monthLeadsList').innerHTML = '<div class="text-center text-slate-400 py-4">Загрузка...</div>';
+
+      try {
+        const res = await fetch(`${API_URL}?action=getStats&month=${selectedMonth}`);
+        const json = await res.json();
+        if (json.status === 'success') {
+          document.getElementById('statHouses').innerText = json.monthHousesCount;
+          document.getElementById('statFlyers').innerText = json.monthFlyersCount;
+          document.getElementById('statLeads').innerText = json.monthLeadsCount;
+
+          const container = document.getElementById('monthLeadsList');
+          if (json.leads.length === 0) {
+            container.innerHTML = '<div class="text-center text-slate-400 py-4">Заявок за этот месяц нет</div>';
+            return;
+          }
+
+          container.innerHTML = json.leads.map(l => `
+            <div class="py-2 flex justify-between items-center">
+              <div>
+                <span class="font-bold text-slate-800">ул. ${l[2]}, д.${l[3]}</span> ${l[5] ? '('+l[5]+')' : ''}
+                <div class="text-[10px] text-slate-400">${l[1]} • ${l[0]}</div>
+              </div>
+              <span class="px-2 py-1 rounded text-[10px] font-bold ${l[4] === 'ШПД' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}">${l[4]}</span>
+            </div>
+          `).join('');
+        }
+      } catch (e) {
+        alert('Ошибка загрузки статистики');
+      }
     }
 
     function openFlyerModal(rowId) {
@@ -183,9 +340,15 @@
     async function submitFlyers() {
       const agent = document.getElementById('agentNameInput').value;
       const count = document.getElementById('flyerCountInput').value;
-      if (!agent) return alert('Укажите имя агента!');
+      if (!agent) return alert('Укажите вашу фамилию!');
 
+      activeHouse.isBlocked = true;
+      activeHouse.daysLeft = 14;
+      activeHouse.agent = agent;
+      renderHouses();
+      updateBaseSummary();
       closeModals();
+
       await fetch(API_URL, {
         method: 'POST',
         body: JSON.stringify({
@@ -209,7 +372,7 @@
     async function submitLead() {
       const agent = document.getElementById('agentNameInput').value;
       const comment = document.getElementById('leadCommentInput').value;
-      if (!agent) return alert('Укажите имя агента!');
+      if (!agent) return alert('Укажите вашу фамилию!');
 
       closeModals();
       await fetch(API_URL, {
@@ -223,59 +386,10 @@
           comment: comment
         })
       });
-      alert('Заявка успешно зафиксирована!');
+      alert('Заявка зафиксирована!');
     }
 
-    async function loadStats() {
-      const res = await fetch(`${API_URL}?action=getStats`);
-      const json = await res.json();
-      if (json.status === 'success') {
-        document.getElementById('statFlyers').innerText = json.historyCount;
-        document.getElementById('statLeads').innerText = json.leadsCount;
-        
-        const container = document.getElementById('leadsList');
-        container.innerHTML = json.leads.map(l => `
-          <div class="py-1.5 flex justify-between items-center">
-            <div>
-              <span class="font-bold text-slate-700">${l[2]}, д.${l[3]}</span> (${l[5] || 'без коммент'})
-              <div class="text-[10px] text-slate-400">${l[1]} • ${l[0]}</div>
-            </div>
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${l[4] === 'ШПД' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'}">${l[4]}</span>
-          </div>
-        `).join('');
-      }
-    }
-
-    function render() {
-      const role = document.getElementById('userRole').value;
-      if (role === 'agent') {
-        document.getElementById('agentView').classList.remove('hidden');
-        document.getElementById('svView').classList.add('hidden');
-      } else {
-        document.getElementById('agentView').classList.add('hidden');
-        document.getElementById('svView').classList.remove('hidden');
-        loadStats();
-      }
-    }
-
-    loadData();
+    init();
   </script>
 </body>
 </html>
-4. Файл manifest.json для превращения в PWA
-Создайте в репозитории рядом с index.html файл manifest.json:
-{
-  "name": "ТТК Адреска",
-  "short_name": "ТТК Адреска",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0c4a6e",
-  "icons": [
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/2991/2991231.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    }
-  ]
-}
