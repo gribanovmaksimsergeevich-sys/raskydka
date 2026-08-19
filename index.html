@@ -18,56 +18,56 @@
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #090d16; }
     
-    .pro-card {
-      background: linear-gradient(145deg, rgba(26, 34, 53, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+    .card-neo {
+      background: linear-gradient(160deg, rgba(26, 35, 58, 0.9) 0%, rgba(13, 18, 30, 0.95) 100%);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.4), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
+      box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
     }
 
-    .pro-input {
-      background: rgba(15, 23, 42, 0.8);
+    .inp-dark {
+      background: rgba(8, 12, 22, 0.85);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
-      color: #f8fafc;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+      color: #f1f5f9;
     }
-    .pro-input:focus {
-      background: rgba(15, 23, 42, 0.95);
+    .inp-dark:focus {
+      background: rgba(12, 18, 33, 0.95);
       border-color: #6366f1;
-      box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.35);
       outline: none;
     }
 
-    .tap-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
-    .tap-scale:active { transform: scale(0.96); }
+    .btn-press { transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+    .btn-press:active { transform: scale(0.96); }
   </style>
 </head>
 <body class="text-slate-100 min-h-screen pb-32 selection:bg-indigo-500 selection:text-white">
 
   <!-- Glow Backgrounds -->
-  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[350px] h-[250px] bg-indigo-600/20 blur-[120px] rounded-full pointer-events-none -z-10"></div>
-  <div class="fixed bottom-10 right-0 w-[250px] h-[250px] bg-purple-600/15 blur-[100px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[350px] h-[220px] bg-indigo-600/20 blur-[130px] rounded-full pointer-events-none -z-10"></div>
+  <div class="fixed bottom-10 right-0 w-[250px] h-[250px] bg-purple-600/15 blur-[120px] rounded-full pointer-events-none -z-10"></div>
 
   <!-- Header -->
-  <header class="sticky top-0 z-40 bg-[#090d16]/80 backdrop-blur-xl border-b border-white/10 px-5 py-4">
+  <header class="sticky top-0 z-40 bg-[#090d16]/80 backdrop-blur-xl border-b border-white/10 px-5 py-3.5">
     <div class="max-w-md mx-auto flex justify-between items-center">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-500 p-0.5 shadow-lg shadow-indigo-500/20">
-          <div class="w-full h-full bg-[#0d121f] rounded-[14px] flex items-center justify-center font-black text-xs text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-300">
+          <div class="w-full h-full bg-[#090d16] rounded-[14px] flex items-center justify-center font-black text-xs text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-300">
             TTK
           </div>
         </div>
         <div>
-          <div class="flex items-center gap-1.5">
-            <h1 class="font-extrabold text-base tracking-tight text-white">Адреска Pro</h1>
-            <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">v5.1</span>
-          </div>
+          <h1 class="font-extrabold text-base tracking-tight text-white flex items-center gap-2">
+            Адреска
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">PRO</span>
+          </h1>
           <p class="text-[10px] text-slate-400 font-medium">Активный канал & Заявки</p>
         </div>
       </div>
       
-      <button onclick="loadAll()" title="Синхронизировать" class="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-sm text-slate-300 tap-scale">
+      <button onclick="loadAll()" title="Обновить" class="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-sm text-slate-300 btn-press">
         🔄
       </button>
     </div>
@@ -75,37 +75,37 @@
 
   <main class="max-w-md mx-auto p-4 space-y-4">
     
-    <!-- ==================== ВКЛАДКА 1: ДОМА ==================== -->
+    <!-- ==================== 1. ДОМА ==================== -->
     <section id="tabHouses" class="space-y-3.5">
-      <div class="pro-card p-4 rounded-3xl space-y-3">
+      <div class="card-neo p-4 rounded-3xl space-y-3">
         <div>
           <div class="flex justify-between items-center mb-1.5 ml-1">
-            <label class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400">Закрепленный агент</label>
+            <label class="text-[10px] font-black uppercase tracking-widest text-indigo-400">Агент</label>
             <span class="text-[10px] text-emerald-400 font-bold">● Автосохранение</span>
           </div>
-          <input type="text" id="agentNameInput" placeholder="Введите фамилию агента..." class="w-full px-4 py-3 pro-input rounded-2xl text-sm font-bold placeholder-slate-500" onchange="saveAgentName()">
+          <input type="text" id="agentNameInput" placeholder="Фамилия агента..." class="w-full px-4 py-3 inp-dark rounded-2xl text-sm font-bold placeholder-slate-500" onchange="saveAgentName()">
         </div>
         
         <div class="relative">
-          <input type="text" id="searchInput" placeholder="Поиск по улице или номеру дома..." class="w-full pl-11 pr-4 py-3 pro-input rounded-2xl text-sm font-medium placeholder-slate-500" oninput="renderHouses()">
+          <input type="text" id="searchInput" placeholder="Поиск улицы или номера дома..." class="w-full pl-11 pr-4 py-3 inp-dark rounded-2xl text-sm font-medium placeholder-slate-500" oninput="renderHouses()">
           <span class="absolute left-4 top-3.5 text-slate-400 text-sm">🔍</span>
         </div>
       </div>
 
       <div id="houseList" class="space-y-3">
-        <div class="text-center text-slate-500 py-16">
+        <div class="text-center text-slate-500 py-16 text-xs font-bold uppercase tracking-wider">
           <div class="inline-block animate-spin text-3xl mb-3">⚡</div>
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Загрузка адресов...</div>
+          <div>Загрузка адресов...</div>
         </div>
       </div>
     </section>
 
-    <!-- ==================== ВКЛАДКА 2: ИСТОРИЯ РАСКИДОК ==================== -->
+    <!-- ==================== 2. ИСТОРИЯ ==================== -->
     <section id="tabHistory" class="hidden space-y-3.5">
-      <div class="pro-card p-4 rounded-3xl flex justify-between items-center">
+      <div class="card-neo p-4 rounded-3xl flex justify-between items-center">
         <div>
           <h2 class="font-extrabold text-sm text-white">Журнал раскидок</h2>
-          <p class="text-[11px] text-slate-400 font-medium">Выполненные дома за выбранный месяц</p>
+          <p class="text-[11px] text-slate-400 font-medium">История выполненных домов за месяц</p>
         </div>
         <span id="historyBadgeCount" class="bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 font-black text-xs px-3 py-1.5 rounded-xl">0</span>
       </div>
@@ -115,18 +115,18 @@
       </div>
     </section>
 
-    <!-- ==================== ВКЛАДКА 3: СТАТИСТИКА ==================== -->
+    <!-- ==================== 3. СТАТИСТИКА ==================== -->
     <section id="tabStats" class="hidden space-y-3.5">
       
-      <div class="pro-card p-4 rounded-3xl flex justify-between items-center">
+      <div class="card-neo p-4 rounded-3xl flex justify-between items-center">
         <div>
           <label class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400 block">Отчетный период</label>
           <span class="text-xs font-bold text-slate-200">Выбор месяца</span>
         </div>
-        <input type="month" id="monthPicker" class="px-3 py-2 pro-input rounded-2xl text-xs font-black text-indigo-300 border-indigo-500/30" onchange="renderStatsData()">
+        <input type="month" id="monthPicker" class="px-3 py-2 inp-dark rounded-2xl text-xs font-black text-indigo-300 border-indigo-500/30" onchange="renderStatsData()">
       </div>
 
-      <div class="pro-card p-4 rounded-3xl space-y-3">
+      <div class="card-neo p-4 rounded-3xl space-y-3">
         <h3 class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Общий фонд адрески</h3>
         
         <div class="grid grid-cols-2 gap-2.5">
@@ -147,7 +147,7 @@
         </div>
       </div>
 
-      <div class="pro-card p-4 rounded-3xl space-y-3">
+      <div class="card-neo p-4 rounded-3xl space-y-3">
         <h3 class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400">Результаты за выбранный месяц</h3>
         <div class="grid grid-cols-3 gap-2 text-center">
           <div class="bg-indigo-500/10 border border-indigo-500/20 p-3 rounded-2xl">
@@ -165,15 +165,18 @@
         </div>
       </div>
 
-      <div class="pro-card p-4 rounded-3xl space-y-3">
-        <h3 class="font-extrabold text-sm text-white">Заявки за период</h3>
+      <div class="card-neo p-4 rounded-3xl space-y-3">
+        <div class="flex justify-between items-center">
+          <h3 class="font-extrabold text-sm text-white">Заявки за период</h3>
+          <span class="text-[10px] text-emerald-400 font-bold">Лиды</span>
+        </div>
         <div id="monthLeadsList" class="space-y-2 text-xs divide-y divide-white/5">
           <div class="text-center text-slate-500 py-4 font-medium">Заявок нет</div>
         </div>
       </div>
 
       <div class="pt-2">
-        <button onclick="clearMonthStats()" class="w-full py-3.5 bg-rose-500/10 hover:bg-rose-500/15 text-rose-400 border border-rose-500/20 text-xs font-extrabold rounded-2xl tap-scale transition flex items-center justify-center gap-2">
+        <button onclick="clearMonthStats()" class="w-full py-3.5 bg-rose-500/10 hover:bg-rose-500/15 text-rose-400 border border-rose-500/20 text-xs font-extrabold rounded-2xl btn-press transition flex items-center justify-center gap-2">
           <span>🗑️</span>
           <span>Очистить данные за выбранный месяц</span>
         </button>
@@ -182,17 +185,17 @@
 
   </main>
 
-  <!-- Bottom Navigation -->
+  <!-- Нижняя панель навигации -->
   <nav class="fixed bottom-0 left-0 right-0 bg-[#090d16]/90 backdrop-blur-2xl border-t border-white/10 px-6 py-2.5 flex justify-around items-center z-40">
-    <button onclick="switchTab('houses')" id="navHouses" class="flex flex-col items-center gap-1 text-indigo-400 font-bold text-[11px] tap-scale">
+    <button onclick="switchTab('houses')" id="navHouses" class="flex flex-col items-center gap-1 text-indigo-400 font-bold text-[11px] btn-press">
       <div class="w-12 py-1 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-base">🏠</div>
       <span>Дома</span>
     </button>
-    <button onclick="switchTab('history')" id="navHistory" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] tap-scale">
+    <button onclick="switchTab('history')" id="navHistory" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] btn-press">
       <div class="w-12 py-1 rounded-2xl flex items-center justify-center text-base">📋</div>
       <span>История</span>
     </button>
-    <button onclick="switchTab('stats')" id="navStats" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] tap-scale">
+    <button onclick="switchTab('stats')" id="navStats" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] btn-press">
       <div class="w-12 py-1 rounded-2xl flex items-center justify-center text-base">📊</div>
       <span>Статистика</span>
     </button>
@@ -200,25 +203,25 @@
 
   <!-- МОДАЛКА: РАСКИДКА -->
   <div id="flyerModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-md">
-    <div class="pro-card w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/15">
+    <div class="card-neo w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/15">
       <div>
         <span class="text-[10px] uppercase font-black tracking-widest text-indigo-400">Раскидка листовок</span>
         <h3 class="font-black text-xl text-white mt-1" id="modalHouseTitle">ул. Ленина, д. 1</h3>
       </div>
       <div>
         <label class="text-xs font-bold text-slate-400">Количество листовок:</label>
-        <input type="number" id="flyerCountInput" class="w-full p-3.5 pro-input rounded-2xl mt-1.5 text-3xl font-black text-center text-indigo-300" value="30">
+        <input type="number" id="flyerCountInput" class="w-full p-3.5 inp-dark rounded-2xl mt-1.5 text-3xl font-black text-center text-indigo-300" value="30">
       </div>
       <div class="flex gap-2.5 pt-2">
-        <button onclick="closeModals()" class="w-1/2 py-3.5 bg-white/5 border border-white/10 text-slate-300 font-bold text-xs rounded-2xl tap-scale">Отмена</button>
-        <button onclick="submitFlyers()" class="w-1/2 py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white font-extrabold text-xs rounded-2xl shadow-lg shadow-indigo-600/30 tap-scale">Раскидать</button>
+        <button onclick="closeModals()" class="w-1/2 py-3.5 bg-white/5 border border-white/10 text-slate-300 font-bold text-xs rounded-2xl btn-press">Отмена</button>
+        <button onclick="submitFlyers()" class="w-1/2 py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white font-extrabold text-xs rounded-2xl shadow-lg shadow-indigo-600/30 btn-press">Раскидать</button>
       </div>
     </div>
   </div>
 
   <!-- МОДАЛКА: ЗАЯВКА -->
   <div id="leadModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-md">
-    <div class="pro-card w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/15">
+    <div class="card-neo w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/15">
       <div>
         <span class="text-[10px] uppercase font-black tracking-widest text-emerald-400">Новая заявка</span>
         <h3 class="font-black text-xl text-white mt-1" id="modalLeadHouseTitle">ул. Ленина, д. 1</h3>
@@ -232,11 +235,11 @@
       </div>
       <div>
         <label class="text-xs font-bold text-slate-400">Квартира / Примечание:</label>
-        <input type="text" id="leadCommentInput" placeholder="кв. 12, перезвонить" class="w-full px-4 py-3 pro-input rounded-2xl mt-1.5 text-sm font-medium">
+        <input type="text" id="leadCommentInput" placeholder="кв. 12, перезвонить" class="w-full px-4 py-3 inp-dark rounded-2xl mt-1.5 text-sm font-medium">
       </div>
       <div class="flex gap-2.5 pt-2">
-        <button onclick="closeModals()" class="w-1/2 py-3.5 bg-white/5 border border-white/10 text-slate-300 font-bold text-xs rounded-2xl tap-scale">Отмена</button>
-        <button onclick="submitLead()" class="w-1/2 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-extrabold text-xs rounded-2xl shadow-lg shadow-emerald-600/30 tap-scale">Сохранить</button>
+        <button onclick="closeModals()" class="w-1/2 py-3.5 bg-white/5 border border-white/10 text-slate-300 font-bold text-xs rounded-2xl btn-press">Отмена</button>
+        <button onclick="submitLead()" class="w-1/2 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-extrabold text-xs rounded-2xl shadow-lg shadow-emerald-600/30 btn-press">Сохранить</button>
       </div>
     </div>
   </div>
@@ -332,7 +335,7 @@
 
       filtered.forEach(h => {
         const card = document.createElement('div');
-        card.className = "pro-card p-4 rounded-3xl flex flex-col justify-between space-y-3";
+        card.className = "card-neo p-4 rounded-3xl flex flex-col justify-between space-y-3";
         
         const isBlocked = h.isBlocked;
         const statusBadge = isBlocked 
@@ -349,10 +352,10 @@
           </div>
 
           <div class="flex gap-2 border-t border-white/5 pt-3">
-            <button onclick="openFlyerModal(${h.rowId})" ${isBlocked ? 'disabled class="w-1/2 py-3 bg-white/5 text-slate-600 rounded-2xl text-xs font-bold cursor-not-allowed"' : 'class="w-1/2 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl text-xs font-extrabold shadow-lg shadow-indigo-600/30 tap-scale transition"'}>
+            <button onclick="openFlyerModal(${h.rowId})" ${isBlocked ? 'disabled class="w-1/2 py-3 bg-white/5 text-slate-600 rounded-2xl text-xs font-bold cursor-not-allowed"' : 'class="w-1/2 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl text-xs font-extrabold shadow-lg shadow-indigo-600/30 btn-press"'}>
               📬 Раскидать
             </button>
-            <button onclick="openLeadModal(${h.rowId})" class="w-1/2 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-extrabold shadow-lg shadow-emerald-600/30 tap-scale transition">
+            <button onclick="openLeadModal(${h.rowId})" class="w-1/2 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-extrabold shadow-lg shadow-emerald-600/30 btn-press">
               🎯 Заявка
             </button>
           </div>
@@ -366,12 +369,12 @@
       tabs.forEach(t => {
         document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}`).classList.add('hidden');
         const nav = document.getElementById(`nav${t.charAt(0).toUpperCase() + t.slice(1)}`);
-        nav.className = "flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] tap-scale";
+        nav.className = "flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] btn-press";
         nav.querySelector('div').className = "w-12 py-1 rounded-2xl flex items-center justify-center text-base";
       });
 
       const activeNav = document.getElementById(`nav${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
-      activeNav.className = "flex flex-col items-center gap-1 text-indigo-400 font-bold text-[11px] tap-scale";
+      activeNav.className = "flex flex-col items-center gap-1 text-indigo-400 font-bold text-[11px] btn-press";
       activeNav.querySelector('div').className = "w-12 py-1 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-base";
       document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.remove('hidden');
 
@@ -390,22 +393,23 @@
           renderStatsData();
         }
       } catch (e) {
-        console.log('Ошибка статистики');
+        console.log('Ошибка при получении аналитики', e);
       }
+    }
+
+    // Сопоставление с выбранным месяцем
+    function matchesMonth(dateVal, targetMonth) {
+      if (!targetMonth) return true;
+      if (!dateVal) return false;
+      var s = String(dateVal).trim();
+      return s.indexOf(targetMonth) === 0 || s.indexOf(targetMonth) !== -1;
     }
 
     function renderStatsData() {
       const selectedMonth = document.getElementById('monthPicker').value; // "YYYY-MM"
 
-      const filteredHistory = allHistory.filter(h => {
-        if (!selectedMonth) return true;
-        return String(h[0]).indexOf(selectedMonth) !== -1;
-      });
-
-      const filteredLeads = allLeads.filter(l => {
-        if (!selectedMonth) return true;
-        return String(l[0]).indexOf(selectedMonth) !== -1;
-      });
+      const filteredHistory = allHistory.filter(h => matchesMonth(h[0], selectedMonth));
+      const filteredLeads = allLeads.filter(l => matchesMonth(l[0], selectedMonth));
 
       let totalFlyers = 0;
       filteredHistory.forEach(h => totalFlyers += (parseInt(h[4], 10) || 0));
@@ -437,7 +441,7 @@
         containerHistory.innerHTML = '<div class="text-center text-slate-500 py-12 font-semibold text-xs">В этом месяце раскидок еще не было</div>';
       } else {
         containerHistory.innerHTML = filteredHistory.map(h => `
-          <div class="pro-card p-4 rounded-3xl flex justify-between items-center">
+          <div class="card-neo p-4 rounded-3xl flex justify-between items-center">
             <div>
               <div class="font-black text-white text-sm tracking-tight">ул. ${h[2]}, д. ${h[3]}</div>
               <div class="text-[10px] text-slate-500 mt-0.5">${h[1]} • ${h[0]}</div>
@@ -508,7 +512,7 @@
       closeModals();
       const url = `${API_URL}?action=addLead&street=${encodeURIComponent(activeHouse.street)}&house=${encodeURIComponent(activeHouse.house)}&agent=${encodeURIComponent(agent)}&leadType=${encodeURIComponent(selectedLeadType)}&comment=${encodeURIComponent(comment)}`;
       await fetch(url, { redirect: "follow" });
-      alert('Заявка успешно сохранена!');
+      alert('Заявка сохранена!');
       setTimeout(fetchStats, 1200);
     }
 
