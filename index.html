@@ -5,190 +5,215 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ТТК Адреска</title>
   
-  <!-- Material Theme Colors -->
-  <meta name="theme-color" content="#312e81">
+  <meta name="theme-color" content="#1e1b4b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <link rel="manifest" href="manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-    body { font-family: 'Roboto', sans-serif; }
-    .m3-surface { background-color: #f8fafc; }
-    .m3-card { background-color: #ffffff; border-radius: 1.25rem; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.07); }
-    .m3-input { background-color: #f1f5f9; border-radius: 0.875rem; transition: all 0.2s ease; }
-    .m3-input:focus { background-color: #ffffff; box-shadow: 0 0 0 2px #4f46e5; outline: none; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    .m3-shadow { box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.04); }
+    .tap-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+    .tap-scale:active { transform: scale(0.96); }
   </style>
 </head>
-<body class="m3-surface min-h-screen text-slate-800 pb-24">
+<body class="bg-slate-50 min-h-screen text-slate-800 pb-28">
 
-  <!-- Material Top App Bar -->
-  <header class="bg-indigo-950 text-white px-4 py-3 sticky top-0 z-50 shadow-md flex justify-between items-center">
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-xl bg-indigo-500 flex items-center justify-center text-sm font-black shadow-inner">TTK</div>
-      <h1 class="font-bold text-base tracking-tight">Адреска & Заявки</h1>
-    </div>
-    <div class="flex items-center gap-2">
-      <button onclick="loadData()" title="Обновить базу" class="w-8 h-8 rounded-full bg-indigo-900 flex items-center justify-center text-xs text-indigo-200 active:scale-95 transition">🔄</button>
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white px-5 py-4 sticky top-0 z-50 shadow-md">
+    <div class="max-w-md mx-auto flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-2xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-sm font-black text-indigo-300 shadow-inner">
+          ТТК
+        </div>
+        <div>
+          <h1 class="font-extrabold text-base tracking-tight leading-none">Активный канал</h1>
+          <span class="text-[10px] text-indigo-300 font-medium">Адреска & Заявки</span>
+        </div>
+      </div>
+      <button onclick="loadData()" title="Синхронизировать" class="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 flex items-center justify-center text-xs text-white tap-scale">
+        🔄
+      </button>
     </div>
   </header>
 
-  <main class="max-w-md mx-auto p-4">
+  <main class="max-w-md mx-auto p-4 space-y-4">
     
     <!-- ==================== ВКЛАДКА 1: ДОМА ==================== -->
-    <section id="tabHouses" class="space-y-3">
-      <div class="m3-card p-4 space-y-3 border border-slate-100">
+    <section id="tabHouses" class="space-y-3.5">
+      <!-- Блок фильтрации -->
+      <div class="bg-white p-4 rounded-3xl m3-shadow border border-slate-100 space-y-3">
         <div>
-          <label class="text-[11px] font-bold uppercase tracking-wider text-indigo-700 ml-1">Агент</label>
-          <input type="text" id="agentNameInput" placeholder="Фамилия агента" class="w-full p-2.5 m3-input text-sm font-bold text-slate-800 mt-1" onchange="saveAgentName()">
+          <div class="flex justify-between items-center mb-1 ml-1">
+            <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Текущий агент</label>
+            <span class="text-[10px] text-indigo-500 font-semibold">Сохраняется</span>
+          </div>
+          <input type="text" id="agentNameInput" placeholder="Введите фамилию агента..." class="w-full px-4 py-3 bg-slate-50 border border-slate-200/80 rounded-2xl text-sm font-bold text-slate-800 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition" onchange="saveAgentName()">
         </div>
+        
         <div class="relative">
-          <input type="text" id="searchInput" placeholder="Поиск улицы или дома..." class="w-full p-2.5 pl-9 m3-input text-sm" oninput="renderHouses()">
-          <span class="absolute left-3 top-2.5 text-slate-400 text-sm">🔍</span>
+          <input type="text" id="searchInput" placeholder="Поиск по улице или номеру дома..." class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200/80 rounded-2xl text-sm font-medium focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition" oninput="renderHouses()">
+          <span class="absolute left-4 top-3.5 text-slate-400 text-sm">🔍</span>
         </div>
       </div>
 
       <!-- Список домов -->
       <div id="houseList" class="space-y-3">
-        <div class="text-center text-slate-400 py-10">Загрузка адресов...</div>
+        <div class="text-center text-slate-400 py-12">
+          <div class="inline-block animate-spin text-2xl mb-2">⏳</div>
+          <div class="text-xs font-semibold">Загрузка адресов...</div>
+        </div>
       </div>
     </section>
 
     <!-- ==================== ВКЛАДКА 2: ИСТОРИЯ РАСКИДОК ==================== -->
     <section id="tabHistory" class="hidden space-y-3">
-      <div class="m3-card p-4 border border-slate-100 flex justify-between items-center">
+      <div class="bg-white p-4 rounded-3xl m3-shadow border border-slate-100 flex justify-between items-center">
         <div>
-          <h2 class="font-bold text-slate-800 text-sm">Журнал раскидок</h2>
-          <div class="text-[11px] text-slate-500">История за выбранный месяц</div>
+          <h2 class="font-extrabold text-slate-800 text-sm">Журнал раскидок</h2>
+          <div class="text-[11px] text-slate-400 font-medium">История выполненных домов за месяц</div>
         </div>
-        <span id="historyBadgeCount" class="bg-indigo-100 text-indigo-700 font-bold text-xs px-2.5 py-1 rounded-full">0</span>
+        <span id="historyBadgeCount" class="bg-indigo-50 border border-indigo-100 text-indigo-700 font-black text-xs px-3 py-1.5 rounded-xl">0</span>
       </div>
 
-      <div id="historyList" class="space-y-2">
-        <div class="text-center text-slate-400 py-8">Загрузка истории...</div>
+      <div id="historyList" class="space-y-2.5">
+        <div class="text-center text-slate-400 py-10 text-xs">Загрузка журнала...</div>
       </div>
     </section>
 
     <!-- ==================== ВКЛАДКА 3: СТАТИСТИКА ==================== -->
-    <section id="tabStats" class="hidden space-y-4">
+    <section id="tabStats" class="hidden space-y-3.5">
       
-      <!-- Фильтр по месяцу -->
-      <div class="m3-card p-4 border border-slate-100 space-y-3">
-        <div class="flex justify-between items-center">
-          <div>
-            <label class="text-[11px] font-bold uppercase tracking-wider text-indigo-700 block">Отчетный период</label>
-            <span class="text-xs text-slate-500">Фильтрует дома, историю и заявки</span>
-          </div>
-          <input type="month" id="monthPicker" class="p-2 border border-slate-200 rounded-xl text-xs font-bold bg-slate-50 text-slate-800" onchange="loadStats()">
+      <!-- Селектор месяца -->
+      <div class="bg-white p-4 rounded-3xl m3-shadow border border-slate-100 flex justify-between items-center">
+        <div>
+          <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 block">Период отчета</label>
+          <span class="text-xs font-bold text-slate-800">Статистика за месяц</span>
         </div>
+        <input type="month" id="monthPicker" class="px-3 py-2 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-black text-slate-800 outline-none focus:border-indigo-500 transition" onchange="renderStatsData()">
       </div>
 
-      <!-- Состояние адресного фонда (Общий) -->
-      <div class="m3-card p-4 border border-slate-100 space-y-3">
-        <h3 class="font-bold text-slate-800 text-xs uppercase tracking-wider text-slate-400">Фонд адрески (Всего в базе)</h3>
+      <!-- Состояние фонда адрески -->
+      <div class="bg-white p-4 rounded-3xl m3-shadow border border-slate-100 space-y-3">
+        <h3 class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Фонд адрески (Всего)</h3>
         
-        <div class="grid grid-cols-2 gap-2">
-          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
-            <div class="text-xs text-slate-500 mb-0.5">Дома</div>
-            <div class="text-lg font-black text-slate-800"><span id="blockedHouses" class="text-indigo-600">0</span> / <span id="totalHouses">0</span></div>
-            <div class="text-[10px] text-slate-400">В блоке / Всего</div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100">
+            <div class="text-[11px] font-bold text-slate-400">Дома</div>
+            <div class="text-xl font-black text-slate-800 mt-1">
+              <span id="blockedHouses" class="text-indigo-600">0</span> <span class="text-slate-300 text-sm">/</span> <span id="totalHouses" class="text-slate-500 text-sm">0</span>
+            </div>
+            <div class="text-[10px] text-slate-400 mt-0.5">В блоке / Всего</div>
           </div>
-          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 text-center">
-            <div class="text-xs text-slate-500 mb-0.5">Квартиры (план)</div>
-            <div class="text-lg font-black text-slate-800"><span id="blockedFlats" class="text-indigo-600">0</span> / <span id="totalFlats">0</span></div>
-            <div class="text-[10px] text-slate-400">В блоке / Всего</div>
+          <div class="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100">
+            <div class="text-[11px] font-bold text-slate-400">Квартиры (план)</div>
+            <div class="text-xl font-black text-slate-800 mt-1">
+              <span id="blockedFlats" class="text-indigo-600">0</span> <span class="text-slate-300 text-sm">/</span> <span id="totalFlats" class="text-slate-500 text-sm">0</span>
+            </div>
+            <div class="text-[10px] text-slate-400 mt-0.5">В блоке / Всего</div>
           </div>
         </div>
       </div>
 
-      <!-- Метрики за выбранный месяц -->
-      <div class="m3-card p-4 border border-slate-100 space-y-3">
-        <h3 class="font-bold text-xs uppercase tracking-wider text-indigo-600">Результаты за выбранный месяц</h3>
+      <!-- Метрики за месяц -->
+      <div class="bg-white p-4 rounded-3xl m3-shadow border border-slate-100 space-y-3">
+        <h3 class="text-[11px] font-bold uppercase tracking-wider text-indigo-600">Результаты за выбранный месяц</h3>
         <div class="grid grid-cols-3 gap-2 text-center">
-          <div class="bg-indigo-50/70 p-2.5 rounded-xl">
-            <div id="statHouses" class="text-xl font-black text-indigo-700">0</div>
-            <div class="text-[10px] font-medium text-indigo-950 mt-0.5">Домов</div>
+          <div class="bg-indigo-50/70 border border-indigo-100/60 p-3 rounded-2xl">
+            <div id="statHouses" class="text-2xl font-black text-indigo-700">0</div>
+            <div class="text-[10px] font-bold text-indigo-950 mt-1">Домов</div>
           </div>
-          <div class="bg-violet-50/70 p-2.5 rounded-xl">
-            <div id="statFlyers" class="text-xl font-black text-violet-700">0</div>
-            <div class="text-[10px] font-medium text-violet-950 mt-0.5">Листовок</div>
+          <div class="bg-violet-50/70 border border-violet-100/60 p-3 rounded-2xl">
+            <div id="statFlyers" class="text-2xl font-black text-violet-700">0</div>
+            <div class="text-[10px] font-bold text-violet-950 mt-1">Листовок</div>
           </div>
-          <div class="bg-emerald-50/70 p-2.5 rounded-xl">
-            <div id="statLeads" class="text-xl font-black text-emerald-700">0</div>
-            <div class="text-[10px] font-medium text-emerald-950 mt-0.5">Заявок</div>
+          <div class="bg-emerald-50/70 border border-emerald-100/60 p-3 rounded-2xl">
+            <div id="statLeads" class="text-2xl font-black text-emerald-700">0</div>
+            <div class="text-[10px] font-bold text-emerald-950 mt-1">Заявок</div>
           </div>
         </div>
       </div>
 
       <!-- Список поступивших заявок -->
-      <div class="m3-card p-4 border border-slate-100 space-y-3">
-        <h3 class="font-bold text-sm text-slate-800">Заявки за месяц</h3>
+      <div class="bg-white p-4 rounded-3xl m3-shadow border border-slate-100 space-y-3">
+        <h3 class="font-extrabold text-sm text-slate-800">Заявки за период</h3>
         <div id="monthLeadsList" class="space-y-2 text-xs divide-y divide-slate-100">
-          <div class="text-center text-slate-400 py-3">Заявок нет</div>
+          <div class="text-center text-slate-400 py-4 font-medium">Заявок нет</div>
         </div>
       </div>
 
       <!-- Кнопка очистки статистики -->
-      <div class="pt-2">
-        <button onclick="clearMonthStats()" class="w-full py-3 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 text-xs font-bold rounded-2xl active:scale-98 transition flex items-center justify-center gap-1.5">
-          🗑️ Очистить данные за выбранный месяц
+      <div class="pt-1">
+        <button onclick="clearMonthStats()" class="w-full py-3.5 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200/80 text-xs font-bold rounded-2xl tap-scale transition flex items-center justify-center gap-2">
+          <span>🗑️</span>
+          <span>Очистить данные за выбранный месяц</span>
         </button>
       </div>
     </section>
 
   </main>
 
-  <!-- Material Bottom Navigation -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-6 py-2 flex justify-around items-center z-40 shadow-lg">
-    <button onclick="switchTab('houses')" id="navHouses" class="flex flex-col items-center gap-1 text-indigo-600 font-bold text-[11px]">
-      <div class="w-12 py-1 rounded-full bg-indigo-100 flex items-center justify-center text-base">🏠</div>
+  <!-- Bottom Navigation -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 px-6 py-2 flex justify-around items-center z-40 shadow-2xl">
+    <button onclick="switchTab('houses')" id="navHouses" class="flex flex-col items-center gap-1 text-indigo-600 font-bold text-[11px] tap-scale">
+      <div class="w-12 py-1 rounded-2xl bg-indigo-100/80 flex items-center justify-center text-base">🏠</div>
       <span>Дома</span>
     </button>
-    <button onclick="switchTab('history')" id="navHistory" class="flex flex-col items-center gap-1 text-slate-400 font-medium text-[11px]">
-      <div class="w-12 py-1 rounded-full flex items-center justify-center text-base">📋</div>
+    <button onclick="switchTab('history')" id="navHistory" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] tap-scale">
+      <div class="w-12 py-1 rounded-2xl flex items-center justify-center text-base">📋</div>
       <span>История</span>
     </button>
-    <button onclick="switchTab('stats')" id="navStats" class="flex flex-col items-center gap-1 text-slate-400 font-medium text-[11px]">
-      <div class="w-12 py-1 rounded-full flex items-center justify-center text-base">📊</div>
+    <button onclick="switchTab('stats')" id="navStats" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] tap-scale">
+      <div class="w-12 py-1 rounded-2xl flex items-center justify-center text-base">📊</div>
       <span>Статистика</span>
     </button>
   </nav>
 
-  <!-- МОДАЛКА: РАСКИДКА -->
-  <div id="flyerModal" class="hidden fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-xs">
-    <div class="m3-card w-full max-w-sm p-5 space-y-4 border border-slate-100">
-      <h3 class="font-bold text-base text-slate-800" id="modalHouseTitle">Отметить раскидку</h3>
+  <!-- МОДАЛЬНОЕ ОКНО: РАСКИДКА -->
+  <div id="flyerModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-xs">
+    <div class="bg-white w-full max-w-sm p-5 rounded-3xl m3-shadow space-y-4">
       <div>
-        <label class="text-xs font-semibold text-slate-500">Количество листовок:</label>
-        <input type="number" id="flyerCountInput" class="w-full p-3 m3-input mt-1 text-xl font-black text-center text-indigo-600" value="30">
+        <span class="text-[10px] uppercase font-extrabold tracking-wider text-indigo-600">Раскидка листовок</span>
+        <h3 class="font-black text-lg text-slate-900 mt-0.5" id="modalHouseTitle">ул. Филатова, д. 22</h3>
+      </div>
+      <div>
+        <label class="text-xs font-bold text-slate-500">Количество листовок:</label>
+        <input type="number" id="flyerCountInput" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl mt-1.5 text-2xl font-black text-center text-indigo-600 outline-none focus:border-indigo-500 focus:bg-white transition" value="30">
       </div>
       <div class="flex gap-2 pt-1">
-        <button onclick="closeModals()" class="w-1/2 py-3 bg-slate-100 text-slate-600 font-bold text-xs rounded-xl">Отмена</button>
-        <button onclick="submitFlyers()" class="w-1/2 py-3 bg-indigo-600 text-white font-bold text-xs rounded-xl shadow-md active:scale-95 transition">Раскидать</button>
+        <button onclick="closeModals()" class="w-1/2 py-3.5 bg-slate-100 text-slate-600 font-bold text-xs rounded-2xl tap-scale">Отмена</button>
+        <button onclick="submitFlyers()" class="w-1/2 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-2xl shadow-lg shadow-indigo-500/25 tap-scale transition">Раскидать</button>
       </div>
     </div>
   </div>
 
-  <!-- МОДАЛКА: ЗАЯВКА -->
-  <div id="leadModal" class="hidden fixed inset-0 bg-black/40 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-xs">
-    <div class="m3-card w-full max-w-sm p-5 space-y-4 border border-slate-100">
-      <h3 class="font-bold text-base text-slate-800" id="modalLeadHouseTitle">Новая заявка</h3>
+  <!-- МОДАЛЬНОЕ ОКНО: ЗАЯВКА -->
+  <div id="leadModal" class="hidden fixed inset-0 bg-slate-900/60 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-xs">
+    <div class="bg-white w-full max-w-sm p-5 rounded-3xl m3-shadow space-y-4">
       <div>
-        <label class="text-xs font-semibold text-slate-500 mb-1.5 block">Тип услуги:</label>
+        <span class="text-[10px] uppercase font-extrabold tracking-wider text-emerald-600">Новая продажа</span>
+        <h3 class="font-black text-lg text-slate-900 mt-0.5" id="modalLeadHouseTitle">ул. Филатова, д. 22</h3>
+      </div>
+      <div>
+        <label class="text-xs font-bold text-slate-500 mb-1.5 block">Тип заявки:</label>
         <div class="grid grid-cols-2 gap-2">
-          <button type="button" onclick="selectLeadType('ШПД')" id="btnLeadSPD" class="py-2.5 border-2 rounded-xl font-bold text-xs bg-indigo-50 border-indigo-600 text-indigo-700">ШПД</button>
-          <button type="button" onclick="selectLeadType('Пакет')" id="btnLeadPkt" class="py-2.5 border-2 border-slate-200 rounded-xl font-bold text-xs text-slate-600">Пакет</button>
+          <button type="button" onclick="selectLeadType('ШПД')" id="btnLeadSPD" class="py-3 border-2 rounded-2xl font-black text-xs bg-indigo-50 border-indigo-600 text-indigo-700 transition">ШПД</button>
+          <button type="button" onclick="selectLeadType('Пакет')" id="btnLeadPkt" class="py-3 border-2 border-slate-200 rounded-2xl font-bold text-xs text-slate-600 transition">Пакет</button>
         </div>
       </div>
       <div>
-        <label class="text-xs font-semibold text-slate-500">Квартира / Примечание:</label>
-        <input type="text" id="leadCommentInput" placeholder="кв. 12, перезвонить" class="w-full p-2.5 m3-input mt-1 text-sm">
+        <label class="text-xs font-bold text-slate-500">Квартира / Примечание:</label>
+        <input type="text" id="leadCommentInput" placeholder="кв. 12, перезвонить после 18:00" class="w-full px-3.5 py-3 bg-slate-50 border border-slate-200 rounded-2xl mt-1.5 text-sm font-medium outline-none focus:border-indigo-500 focus:bg-white transition">
       </div>
       <div class="flex gap-2 pt-1">
-        <button onclick="closeModals()" class="w-1/2 py-3 bg-slate-100 text-slate-600 font-bold text-xs rounded-xl">Отмена</button>
-        <button onclick="submitLead()" class="w-1/2 py-3 bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-md active:scale-95 transition">Зафиксировать</button>
+        <button onclick="closeModals()" class="w-1/2 py-3.5 bg-slate-100 text-slate-600 font-bold text-xs rounded-2xl tap-scale">Отмена</button>
+        <button onclick="submitLead()" class="w-1/2 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-2xl shadow-lg shadow-emerald-500/25 tap-scale transition">Сохранить</button>
       </div>
     </div>
   </div>
@@ -198,12 +223,13 @@
       navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
     }
 
-    // ⚠️ ВСТАВЬТЕ СЮДА ВАШ URL ИЗ GOOGLE APPS SCRIPT
     const API_URL = "https://script.google.com/macros/s/AKfycbw8xIJxuI2zORFyZycZ-jdO67PeQLxb6gNp-7DR1sYyWorOSba7xFu5jcHlXIConZsd/exec";
 
     let housesData = [];
     let activeHouse = null;
     let selectedLeadType = 'ШПД';
+    let allHistory = [];
+    let allLeads = [];
 
     const now = new Date();
     document.getElementById('monthPicker').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -233,13 +259,13 @@
         const res = await fetch(`${API_URL}?action=getData`, { redirect: "follow" });
         const json = await res.json();
         if (json.status === 'success') {
-          housesData = json.houses;
+          housesData = json.houses || [];
           localStorage.setItem('ttk_houses_cache', JSON.stringify(housesData));
           renderHouses();
           updateBaseSummary();
         }
       } catch (e) {
-        console.log('Работа в кэш-режиме');
+        console.log('Кэш режим');
       }
     }
 
@@ -272,33 +298,33 @@
       );
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="text-center text-slate-400 py-8">Дома не найдены</div>';
+        container.innerHTML = '<div class="text-center text-slate-400 py-10 text-xs font-semibold">Дома не найдены</div>';
         return;
       }
 
       filtered.forEach(h => {
         const card = document.createElement('div');
-        card.className = "m3-card p-4 border border-slate-100 flex flex-col justify-between space-y-3";
+        card.className = "bg-white p-4 rounded-3xl m3-shadow border border-slate-100/80 flex flex-col justify-between space-y-3";
         
         const isBlocked = h.isBlocked;
         const statusBadge = isBlocked 
-          ? `<span class="bg-amber-100 text-amber-800 text-[11px] px-2.5 py-1 rounded-full font-bold">🔒 Блок: ${h.daysLeft} дн.</span>`
-          : `<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2.5 py-1 rounded-full font-bold">✅ Свободен</span>`;
+          ? `<span class="bg-rose-50 border border-rose-100 text-rose-700 text-[11px] px-2.5 py-1 rounded-xl font-black">🔒 Блок ${h.daysLeft} дн.</span>`
+          : `<span class="bg-emerald-50 border border-emerald-100 text-emerald-700 text-[11px] px-2.5 py-1 rounded-xl font-black">✅ Свободен</span>`;
 
         card.innerHTML = `
           <div class="flex justify-between items-start">
             <div>
-              <div class="font-bold text-slate-800 text-base tracking-tight">ул. ${h.street}, д. ${h.house}</div>
-              <div class="text-xs text-slate-400 mt-0.5">План: ${h.plan} кв. ${h.agent ? '• ' + h.agent : ''}</div>
+              <div class="font-extrabold text-slate-800 text-base tracking-tight leading-snug">ул. ${h.street}, д. ${h.house}</div>
+              <div class="text-xs font-medium text-slate-400 mt-0.5">План: <strong class="text-slate-700 font-bold">${h.plan} кв.</strong> ${h.agent ? '• ' + h.agent : ''}</div>
             </div>
             ${statusBadge}
           </div>
 
-          <div class="flex gap-2 border-t border-slate-100 pt-2.5">
-            <button onclick="openFlyerModal(${h.rowId})" ${isBlocked ? 'disabled class="w-1/2 py-2.5 bg-slate-100 text-slate-400 rounded-xl text-xs font-bold cursor-not-allowed"' : 'class="w-1/2 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-xs active:scale-95 transition"'}>
+          <div class="flex gap-2 border-t border-slate-100 pt-3">
+            <button onclick="openFlyerModal(${h.rowId})" ${isBlocked ? 'disabled class="w-1/2 py-3 bg-slate-100 text-slate-400 rounded-2xl text-xs font-bold cursor-not-allowed"' : 'class="w-1/2 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold shadow-md shadow-indigo-500/20 tap-scale transition"'}>
               📬 Раскидать
             </button>
-            <button onclick="openLeadModal(${h.rowId})" class="w-1/2 py-2.5 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow-xs active:scale-95 transition">
+            <button onclick="openLeadModal(${h.rowId})" class="w-1/2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl text-xs font-bold shadow-md shadow-emerald-500/20 tap-scale transition">
               🎯 Заявка
             </button>
           </div>
@@ -312,76 +338,98 @@
       tabs.forEach(t => {
         document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}`).classList.add('hidden');
         const nav = document.getElementById(`nav${t.charAt(0).toUpperCase() + t.slice(1)}`);
-        nav.className = "flex flex-col items-center gap-1 text-slate-400 font-medium text-[11px]";
-        nav.querySelector('div').className = "w-12 py-1 rounded-full flex items-center justify-center text-base";
+        nav.className = "flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] tap-scale";
+        nav.querySelector('div').className = "w-12 py-1 rounded-2xl flex items-center justify-center text-base";
       });
 
       const activeNav = document.getElementById(`nav${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
-      activeNav.className = "flex flex-col items-center gap-1 text-indigo-600 font-bold text-[11px]";
-      activeNav.querySelector('div').className = "w-12 py-1 rounded-full bg-indigo-100 flex items-center justify-center text-base";
+      activeNav.className = "flex flex-col items-center gap-1 text-indigo-600 font-bold text-[11px] tap-scale";
+      activeNav.querySelector('div').className = "w-12 py-1 rounded-2xl bg-indigo-100/80 flex items-center justify-center text-base";
       document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.remove('hidden');
 
       if (tab === 'history' || tab === 'stats') {
-        loadStats();
+        fetchStats();
       }
     }
 
-    async function loadStats() {
-      const selectedMonth = document.getElementById('monthPicker').value;
-      if (!selectedMonth) return;
-
+    async function fetchStats() {
       try {
-        const res = await fetch(`${API_URL}?action=getStats&month=${selectedMonth}`, { redirect: "follow" });
+        const res = await fetch(`${API_URL}?action=getStats`, { redirect: "follow" });
         const json = await res.json();
         if (json.status === 'success') {
-          // Метрики
-          document.getElementById('statHouses').innerText = json.monthHousesCount;
-          document.getElementById('statFlyers').innerText = json.monthFlyersCount;
-          document.getElementById('statLeads').innerText = json.monthLeadsCount;
-          document.getElementById('historyBadgeCount').innerText = json.history.length;
-
-          // Список заявок
-          const containerLeads = document.getElementById('monthLeadsList');
-          if (json.leads.length === 0) {
-            containerLeads.innerHTML = '<div class="text-center text-slate-400 py-3">Заявок за этот месяц нет</div>';
-          } else {
-            containerLeads.innerHTML = json.leads.map(l => `
-              <div class="py-2 flex justify-between items-center">
-                <div>
-                  <span class="font-bold text-slate-800">ул. ${l[2]}, д.${l[3]}</span> ${l[5] ? '('+l[5]+')' : ''}
-                  <div class="text-[10px] text-slate-400">${l[1]} • ${l[0]}</div>
-                </div>
-                <span class="px-2 py-0.5 rounded-md text-[10px] font-bold ${l[4] === 'ШПД' ? 'bg-indigo-100 text-indigo-700' : 'bg-purple-100 text-purple-700'}">${l[4]}</span>
-              </div>
-            `).join('');
-          }
-
-          // Список истории раскидок
-          const containerHistory = document.getElementById('historyList');
-          if (json.history.length === 0) {
-            containerHistory.innerHTML = '<div class="text-center text-slate-400 py-8">В этом месяце раскидок еще не было</div>';
-          } else {
-            containerHistory.innerHTML = json.history.map(h => `
-              <div class="m3-card p-3.5 border border-slate-100 flex justify-between items-center text-xs">
-                <div>
-                  <div class="font-bold text-slate-800 text-sm">ул. ${h[2]}, д. ${h[3]}</div>
-                  <div class="text-[10px] text-slate-400 mt-0.5">${h[1]} • ${h[0]}</div>
-                </div>
-                <div class="bg-indigo-50 text-indigo-700 font-black px-2.5 py-1 rounded-lg text-xs">
-                  ${h[4]} лист.
-                </div>
-              </div>
-            `).join('');
-          }
+          allHistory = json.history || [];
+          allLeads = json.leads || [];
+          renderStatsData();
         }
       } catch (e) {
-        console.log('Ошибка при получении аналитики');
+        console.log('Ошибка получения статистики', e);
+      }
+    }
+
+    function renderStatsData() {
+      const selectedMonth = document.getElementById('monthPicker').value; // "YYYY-MM"
+
+      // Фильтрация истории и заявок по выбранному месяцу
+      const filteredHistory = allHistory.filter(h => {
+        if (!selectedMonth) return true;
+        return String(h[0]).includes(selectedMonth);
+      });
+
+      const filteredLeads = allLeads.filter(l => {
+        if (!selectedMonth) return true;
+        return String(l[0]).includes(selectedMonth);
+      });
+
+      // Подсчет листовок
+      let totalFlyers = 0;
+      filteredHistory.forEach(h => {
+        totalFlyers += (parseInt(h[4], 10) || 0);
+      });
+
+      // Присвоение числовых значений в карточки
+      document.getElementById('statHouses').innerText = filteredHistory.length || 0;
+      document.getElementById('statFlyers').innerText = totalFlyers || 0;
+      document.getElementById('statLeads').innerText = filteredLeads.length || 0;
+      document.getElementById('historyBadgeCount').innerText = filteredHistory.length || 0;
+
+      // Отображение заявок
+      const containerLeads = document.getElementById('monthLeadsList');
+      if (filteredLeads.length === 0) {
+        containerLeads.innerHTML = '<div class="text-center text-slate-400 py-4 font-medium">Заявок за этот месяц нет</div>';
+      } else {
+        containerLeads.innerHTML = filteredLeads.map(l => `
+          <div class="py-2.5 flex justify-between items-center">
+            <div>
+              <span class="font-extrabold text-slate-800 text-xs">ул. ${l[2]}, д.${l[3]}</span> ${l[5] ? '<span class="text-slate-500 font-medium">('+l[5]+')</span>' : ''}
+              <div class="text-[10px] text-slate-400 mt-0.5">${l[1]} • ${l[0]}</div>
+            </div>
+            <span class="px-2.5 py-1 rounded-xl text-[10px] font-black ${l[4] === 'ШПД' ? 'bg-indigo-50 border border-indigo-100 text-indigo-700' : 'bg-purple-50 border border-purple-100 text-purple-700'}">${l[4]}</span>
+          </div>
+        `).join('');
+      }
+
+      // Отображение журнала раскидок
+      const containerHistory = document.getElementById('historyList');
+      if (filteredHistory.length === 0) {
+        containerHistory.innerHTML = '<div class="text-center text-slate-400 py-10 font-semibold text-xs">В этом месяце раскидок еще не было</div>';
+      } else {
+        containerHistory.innerHTML = filteredHistory.map(h => `
+          <div class="bg-white p-3.5 rounded-2xl m3-shadow border border-slate-100 flex justify-between items-center">
+            <div>
+              <div class="font-extrabold text-slate-800 text-sm">ул. ${h[2]}, д. ${h[3]}</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">${h[1]} • ${h[0]}</div>
+            </div>
+            <div class="bg-indigo-50 border border-indigo-100 text-indigo-700 font-black px-3 py-1.5 rounded-xl text-xs">
+              ${h[4]} лист.
+            </div>
+          </div>
+        `).join('');
       }
     }
 
     async function clearMonthStats() {
       const selectedMonth = document.getElementById('monthPicker').value;
-      if (!confirm(`Вы действительно хотите очистить всю статистику раскидок и заявок за ${selectedMonth}? Это действие необратимо.`)) {
+      if (!confirm(`Вы действительно хотите очистить всю историю и заявки за ${selectedMonth}? Это действие необратимо.`)) {
         return;
       }
 
@@ -398,7 +446,7 @@
       alert(`Данные за ${selectedMonth} очищены!`);
       setTimeout(() => {
         loadData();
-        loadStats();
+        fetchStats();
       }, 1200);
     }
 
@@ -411,7 +459,7 @@
 
     function openLeadModal(rowId) {
       activeHouse = housesData.find(h => h.rowId === rowId);
-      document.getElementById('modalLeadHouseTitle').innerText = `Заявка: ул. ${activeHouse.street}, д. ${activeHouse.house}`;
+      document.getElementById('modalLeadHouseTitle').innerText = `ул. ${activeHouse.street}, д. ${activeHouse.house}`;
       document.getElementById('leadModal').classList.remove('hidden');
     }
 
@@ -450,8 +498,8 @@
 
     function selectLeadType(type) {
       selectedLeadType = type;
-      document.getElementById('btnLeadSPD').className = type === 'ШПД' ? 'py-2.5 border-2 rounded-xl font-bold text-xs bg-indigo-50 border-indigo-600 text-indigo-700' : 'py-2.5 border-2 border-slate-200 rounded-xl font-bold text-xs text-slate-600';
-      document.getElementById('btnLeadPkt').className = type === 'Пакет' ? 'py-2.5 border-2 rounded-xl font-bold text-xs bg-indigo-50 border-indigo-600 text-indigo-700' : 'py-2.5 border-2 border-slate-200 rounded-xl font-bold text-xs text-slate-600';
+      document.getElementById('btnLeadSPD').className = type === 'ШПД' ? 'py-3 border-2 rounded-2xl font-black text-xs bg-indigo-50 border-indigo-600 text-indigo-700 transition' : 'py-3 border-2 border-slate-200 rounded-2xl font-bold text-xs text-slate-600 transition';
+      document.getElementById('btnLeadPkt').className = type === 'Пакет' ? 'py-3 border-2 rounded-2xl font-black text-xs bg-indigo-50 border-indigo-600 text-indigo-700 transition' : 'py-3 border-2 border-slate-200 rounded-2xl font-bold text-xs text-slate-600 transition';
     }
 
     async function submitLead() {
@@ -473,7 +521,7 @@
           comment: comment
         })
       });
-      alert('Заявка зафиксирована!');
+      alert('Заявка сохранена!');
     }
 
     init();
