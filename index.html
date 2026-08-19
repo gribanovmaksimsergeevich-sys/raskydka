@@ -1,75 +1,124 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ТТК Адреска Pro</title>
   
-  <meta name="theme-color" content="#090d16">
+  <meta name="theme-color" content="#090d16" id="metaThemeColor">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <link rel="manifest" href="manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cream: {
+              50: '#faf8f5',
+              100: '#f3efe8',
+              200: '#e8e2d7',
+              300: '#d7cdbe',
+              800: '#3a352d',
+              900: '#23201a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #090d16; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.3s ease, color 0.3s ease; }
     
-    .card-neo {
+    /* Темная тема - Glassmorphic Dark */
+    .dark .pro-card {
       background: linear-gradient(160deg, rgba(26, 35, 58, 0.9) 0%, rgba(13, 18, 30, 0.95) 100%);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.1);
     }
-
-    .inp-dark {
+    .dark .inp-custom {
       background: rgba(8, 12, 22, 0.85);
       border: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
       color: #f1f5f9;
     }
-    .inp-dark:focus {
+    .dark .inp-custom:focus {
       background: rgba(12, 18, 33, 0.95);
       border-color: #6366f1;
       box-shadow: 0 0 15px rgba(99, 102, 241, 0.35);
-      outline: none;
+    }
+
+    /* Светлая тема - Серо-кремовая теплая */
+    html:not(.dark) body {
+      background-color: #f0ebe1;
+      color: #26231e;
+    }
+    html:not(.dark) .pro-card {
+      background: #fdfbf7;
+      border: 1px solid #dfd7c8;
+      box-shadow: 0 10px 25px -5px rgba(80, 70, 55, 0.08), 0 4px 6px -2px rgba(80, 70, 55, 0.04);
+    }
+    html:not(.dark) .inp-custom {
+      background: #e9e3d6;
+      border: 1px solid #d4cab8;
+      box-shadow: inset 0 2px 4px rgba(80, 70, 55, 0.05);
+      color: #23201a;
+    }
+    html:not(.dark) .inp-custom:focus {
+      background: #fdfbf7;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
     }
 
     .btn-press { transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
     .btn-press:active { transform: scale(0.96); }
   </style>
 </head>
-<body class="text-slate-100 min-h-screen pb-32 selection:bg-indigo-500 selection:text-white">
+<body class="bg-[#090d16] text-slate-100 min-h-screen pb-32 selection:bg-indigo-500 selection:text-white">
 
-  <!-- Glow Backgrounds -->
-  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[350px] h-[220px] bg-indigo-600/20 blur-[130px] rounded-full pointer-events-none -z-10"></div>
-  <div class="fixed bottom-10 right-0 w-[250px] h-[250px] bg-purple-600/15 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+  <!-- Неоновые фоновые градиенты (видны в темной теме) -->
+  <div class="dark:block hidden fixed top-0 left-1/2 -translate-x-1/2 w-[350px] h-[220px] bg-indigo-600/20 blur-[130px] rounded-full pointer-events-none -z-10"></div>
+  <div class="dark:block hidden fixed bottom-10 right-0 w-[250px] h-[250px] bg-purple-600/15 blur-[120px] rounded-full pointer-events-none -z-10"></div>
 
   <!-- Header -->
-  <header class="sticky top-0 z-40 bg-[#090d16]/80 backdrop-blur-xl border-b border-white/10 px-5 py-3.5">
+  <header class="sticky top-0 z-40 bg-[#090d16]/85 dark:bg-[#090d16]/85 bg-[#f0ebe1]/90 backdrop-blur-xl border-b dark:border-white/10 border-stone-300 px-5 py-3.5">
     <div class="max-w-md mx-auto flex justify-between items-center">
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-500 p-0.5 shadow-lg shadow-indigo-500/20">
-          <div class="w-full h-full bg-[#090d16] rounded-[14px] flex items-center justify-center font-black text-xs text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-300">
+          <div class="w-full h-full dark:bg-[#090d16] bg-[#fdfbf7] rounded-[14px] flex items-center justify-center font-black text-xs text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-500 dark:from-indigo-400 dark:to-purple-300">
             TTK
           </div>
         </div>
         <div>
-          <h1 class="font-extrabold text-base tracking-tight text-white flex items-center gap-2">
+          <h1 class="font-extrabold text-base tracking-tight dark:text-white text-stone-900 flex items-center gap-2">
             Адреска
-            <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">PRO</span>
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-black dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-500/30 bg-indigo-100 text-indigo-700 border border-indigo-200">PRO</span>
           </h1>
-          <p class="text-[10px] text-slate-400 font-medium">Активный канал & Заявки</p>
+          <p class="text-[10px] dark:text-slate-400 text-stone-500 font-medium">Активный канал & Заявки</p>
         </div>
       </div>
       
-      <button onclick="loadAll()" title="Обновить" class="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-sm text-slate-300 btn-press">
-        🔄
-      </button>
+      <div class="flex items-center gap-2">
+        <!-- Кнопка переключения темы -->
+        <button onclick="toggleTheme()" id="themeToggleBtn" title="Сменить тему" class="w-10 h-10 rounded-2xl dark:bg-white/5 bg-stone-200/80 hover:opacity-80 border dark:border-white/10 border-stone-300 flex items-center justify-center text-sm btn-press">
+          🌙
+        </button>
+
+        <!-- Кнопка обновления -->
+        <button onclick="loadAll()" title="Обновить" class="w-10 h-10 rounded-2xl dark:bg-white/5 bg-stone-200/80 hover:opacity-80 border dark:border-white/10 border-stone-300 flex items-center justify-center text-sm dark:text-slate-300 text-stone-700 btn-press">
+          🔄
+        </button>
+      </div>
     </div>
   </header>
 
@@ -77,23 +126,23 @@
     
     <!-- ==================== 1. ДОМА ==================== -->
     <section id="tabHouses" class="space-y-3.5">
-      <div class="card-neo p-4 rounded-3xl space-y-3">
+      <div class="pro-card p-4 rounded-3xl space-y-3">
         <div>
           <div class="flex justify-between items-center mb-1.5 ml-1">
-            <label class="text-[10px] font-black uppercase tracking-widest text-indigo-400">Агент</label>
-            <span class="text-[10px] text-emerald-400 font-bold">● Автосохранение</span>
+            <label class="text-[10px] font-black uppercase tracking-widest dark:text-indigo-400 text-indigo-600">Агент</label>
+            <span class="text-[10px] text-emerald-500 font-bold">● Автосохранение</span>
           </div>
-          <input type="text" id="agentNameInput" placeholder="Фамилия агента..." class="w-full px-4 py-3 inp-dark rounded-2xl text-sm font-bold placeholder-slate-500" onchange="saveAgentName()">
+          <input type="text" id="agentNameInput" placeholder="Фамилия агента..." class="w-full px-4 py-3 inp-custom rounded-2xl text-sm font-bold dark:placeholder-slate-500 placeholder-stone-400 outline-none" onchange="saveAgentName()">
         </div>
         
         <div class="relative">
-          <input type="text" id="searchInput" placeholder="Поиск улицы или номера дома..." class="w-full pl-11 pr-4 py-3 inp-dark rounded-2xl text-sm font-medium placeholder-slate-500" oninput="renderHouses()">
-          <span class="absolute left-4 top-3.5 text-slate-400 text-sm">🔍</span>
+          <input type="text" id="searchInput" placeholder="Поиск по улице или номеру дома..." class="w-full pl-11 pr-4 py-3 inp-custom rounded-2xl text-sm font-medium dark:placeholder-slate-500 placeholder-stone-400 outline-none" oninput="renderHouses()">
+          <span class="absolute left-4 top-3.5 text-stone-400 text-sm">🔍</span>
         </div>
       </div>
 
       <div id="houseList" class="space-y-3">
-        <div class="text-center text-slate-500 py-16 text-xs font-bold uppercase tracking-wider">
+        <div class="text-center dark:text-slate-500 text-stone-400 py-16 text-xs font-bold uppercase tracking-wider">
           <div class="inline-block animate-spin text-3xl mb-3">⚡</div>
           <div>Загрузка адресов...</div>
         </div>
@@ -102,81 +151,81 @@
 
     <!-- ==================== 2. ИСТОРИЯ ==================== -->
     <section id="tabHistory" class="hidden space-y-3.5">
-      <div class="card-neo p-4 rounded-3xl flex justify-between items-center">
+      <div class="pro-card p-4 rounded-3xl flex justify-between items-center">
         <div>
-          <h2 class="font-extrabold text-sm text-white">Журнал раскидок</h2>
-          <p class="text-[11px] text-slate-400 font-medium">История выполненных домов за месяц</p>
+          <h2 class="font-extrabold text-sm dark:text-white text-stone-900">Журнал раскидок</h2>
+          <p class="text-[11px] dark:text-slate-400 text-stone-500 font-medium">История выполненных домов за месяц</p>
         </div>
-        <span id="historyBadgeCount" class="bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 font-black text-xs px-3 py-1.5 rounded-xl">0</span>
+        <span id="historyBadgeCount" class="dark:bg-indigo-500/20 dark:border-indigo-500/30 dark:text-indigo-300 bg-indigo-100 border border-indigo-200 text-indigo-700 font-black text-xs px-3 py-1.5 rounded-xl">0</span>
       </div>
 
       <div id="historyList" class="space-y-2.5">
-        <div class="text-center text-slate-500 py-12 text-xs font-medium">Загрузка журнала...</div>
+        <div class="text-center dark:text-slate-500 text-stone-400 py-12 text-xs font-medium">Загрузка журнала...</div>
       </div>
     </section>
 
     <!-- ==================== 3. СТАТИСТИКА ==================== -->
     <section id="tabStats" class="hidden space-y-3.5">
       
-      <div class="card-neo p-4 rounded-3xl flex justify-between items-center">
+      <div class="pro-card p-4 rounded-3xl flex justify-between items-center">
         <div>
-          <label class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400 block">Отчетный период</label>
-          <span class="text-xs font-bold text-slate-200">Выбор месяца</span>
+          <label class="text-[10px] font-extrabold uppercase tracking-widest dark:text-indigo-400 text-indigo-600 block">Отчетный период</label>
+          <span class="text-xs font-bold dark:text-slate-200 text-stone-800">Выбор месяца</span>
         </div>
-        <input type="month" id="monthPicker" class="px-3 py-2 inp-dark rounded-2xl text-xs font-black text-indigo-300 border-indigo-500/30" onchange="renderStatsData()">
+        <input type="month" id="monthPicker" class="px-3 py-2 inp-custom rounded-2xl text-xs font-black dark:text-indigo-300 text-indigo-700 outline-none" onchange="renderStatsData()">
       </div>
 
-      <div class="card-neo p-4 rounded-3xl space-y-3">
-        <h3 class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Общий фонд адрески</h3>
+      <div class="pro-card p-4 rounded-3xl space-y-3">
+        <h3 class="text-[10px] font-extrabold uppercase tracking-widest dark:text-slate-400 text-stone-400">Общий фонд адрески</h3>
         
         <div class="grid grid-cols-2 gap-2.5">
-          <div class="bg-slate-900/60 p-3.5 rounded-2xl border border-white/5">
-            <div class="text-[11px] font-semibold text-slate-400">Дома</div>
-            <div class="text-2xl font-black text-white mt-1">
-              <span id="blockedHouses" class="text-indigo-400">0</span> <span class="text-slate-600 text-sm">/</span> <span id="totalHouses" class="text-slate-400 text-sm">0</span>
+          <div class="dark:bg-slate-900/60 bg-[#eae4d7] p-3.5 rounded-2xl border dark:border-white/5 border-stone-300">
+            <div class="text-[11px] font-semibold dark:text-slate-400 text-stone-500">Дома</div>
+            <div class="text-2xl font-black dark:text-white text-stone-900 mt-1">
+              <span class="dark:text-indigo-400 text-indigo-600" id="blockedHouses">0</span> <span class="text-stone-400 text-sm">/</span> <span id="totalHouses" class="dark:text-slate-400 text-stone-600 text-sm">0</span>
             </div>
-            <div class="text-[10px] text-slate-500 mt-0.5">В блоке / Всего</div>
+            <div class="text-[10px] dark:text-slate-500 text-stone-400 mt-0.5">В блоке / Всего</div>
           </div>
-          <div class="bg-slate-900/60 p-3.5 rounded-2xl border border-white/5">
-            <div class="text-[11px] font-semibold text-slate-400">Квартиры (план)</div>
-            <div class="text-2xl font-black text-white mt-1">
-              <span id="blockedFlats" class="text-purple-400">0</span> <span class="text-slate-600 text-sm">/</span> <span id="totalFlats" class="text-slate-400 text-sm">0</span>
+          <div class="dark:bg-slate-900/60 bg-[#eae4d7] p-3.5 rounded-2xl border dark:border-white/5 border-stone-300">
+            <div class="text-[11px] font-semibold dark:text-slate-400 text-stone-500">Квартиры (план)</div>
+            <div class="text-2xl font-black dark:text-white text-stone-900 mt-1">
+              <span class="dark:text-purple-400 text-purple-600" id="blockedFlats">0</span> <span class="text-stone-400 text-sm">/</span> <span id="totalFlats" class="dark:text-slate-400 text-stone-600 text-sm">0</span>
             </div>
-            <div class="text-[10px] text-slate-500 mt-0.5">В блоке / Всего</div>
+            <div class="text-[10px] dark:text-slate-500 text-stone-400 mt-0.5">В блоке / Всего</div>
           </div>
         </div>
       </div>
 
-      <div class="card-neo p-4 rounded-3xl space-y-3">
-        <h3 class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-400">Результаты за выбранный месяц</h3>
+      <div class="pro-card p-4 rounded-3xl space-y-3">
+        <h3 class="text-[10px] font-extrabold uppercase tracking-widest dark:text-indigo-400 text-indigo-600">Результаты за выбранный месяц</h3>
         <div class="grid grid-cols-3 gap-2 text-center">
-          <div class="bg-indigo-500/10 border border-indigo-500/20 p-3 rounded-2xl">
-            <div id="statHouses" class="text-2xl font-black text-indigo-300">0</div>
-            <div class="text-[10px] font-bold text-slate-400 mt-1">Домов</div>
+          <div class="dark:bg-indigo-500/10 dark:border-indigo-500/20 bg-indigo-50 border border-indigo-100 p-3 rounded-2xl">
+            <div id="statHouses" class="text-2xl font-black dark:text-indigo-300 text-indigo-700">0</div>
+            <div class="text-[10px] font-bold dark:text-slate-400 text-indigo-900/60 mt-1">Домов</div>
           </div>
-          <div class="bg-purple-500/10 border border-purple-500/20 p-3 rounded-2xl">
-            <div id="statFlyers" class="text-2xl font-black text-purple-300">0</div>
-            <div class="text-[10px] font-bold text-slate-400 mt-1">Листовок</div>
+          <div class="dark:bg-purple-500/10 dark:border-purple-500/20 bg-purple-50 border border-purple-100 p-3 rounded-2xl">
+            <div id="statFlyers" class="text-2xl font-black dark:text-purple-300 text-purple-700">0</div>
+            <div class="text-[10px] font-bold dark:text-slate-400 text-purple-900/60 mt-1">Листовок</div>
           </div>
-          <div class="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-2xl">
-            <div id="statLeads" class="text-2xl font-black text-emerald-400">0</div>
-            <div class="text-[10px] font-bold text-slate-400 mt-1">Заявок</div>
+          <div class="dark:bg-emerald-500/10 dark:border-emerald-500/20 bg-emerald-50 border border-emerald-100 p-3 rounded-2xl">
+            <div id="statLeads" class="text-2xl font-black dark:text-emerald-400 text-emerald-700">0</div>
+            <div class="text-[10px] font-bold dark:text-slate-400 text-emerald-900/60 mt-1">Заявок</div>
           </div>
         </div>
       </div>
 
-      <div class="card-neo p-4 rounded-3xl space-y-3">
+      <div class="pro-card p-4 rounded-3xl space-y-3">
         <div class="flex justify-between items-center">
-          <h3 class="font-extrabold text-sm text-white">Заявки за период</h3>
-          <span class="text-[10px] text-emerald-400 font-bold">Лиды</span>
+          <h3 class="font-extrabold text-sm dark:text-white text-stone-900">Заявки за период</h3>
+          <span class="text-[10px] text-emerald-500 font-bold">Лиды</span>
         </div>
-        <div id="monthLeadsList" class="space-y-2 text-xs divide-y divide-white/5">
-          <div class="text-center text-slate-500 py-4 font-medium">Заявок нет</div>
+        <div id="monthLeadsList" class="space-y-2 text-xs divide-y dark:divide-white/5 divide-stone-200">
+          <div class="text-center dark:text-slate-500 text-stone-400 py-4 font-medium">Заявок нет</div>
         </div>
       </div>
 
       <div class="pt-2">
-        <button onclick="clearMonthStats()" class="w-full py-3.5 bg-rose-500/10 hover:bg-rose-500/15 text-rose-400 border border-rose-500/20 text-xs font-extrabold rounded-2xl btn-press transition flex items-center justify-center gap-2">
+        <button onclick="clearMonthStats()" class="w-full py-3.5 dark:bg-rose-500/10 dark:hover:bg-rose-500/15 dark:text-rose-400 dark:border-rose-500/20 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 text-xs font-extrabold rounded-2xl btn-press transition flex items-center justify-center gap-2">
           <span>🗑️</span>
           <span>Очистить данные за выбранный месяц</span>
         </button>
@@ -186,16 +235,16 @@
   </main>
 
   <!-- Нижняя панель навигации -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-[#090d16]/90 backdrop-blur-2xl border-t border-white/10 px-6 py-2.5 flex justify-around items-center z-40">
-    <button onclick="switchTab('houses')" id="navHouses" class="flex flex-col items-center gap-1 text-indigo-400 font-bold text-[11px] btn-press">
-      <div class="w-12 py-1 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-base">🏠</div>
+  <nav class="fixed bottom-0 left-0 right-0 dark:bg-[#090d16]/90 bg-[#f0ebe1]/95 backdrop-blur-2xl border-t dark:border-white/10 border-stone-300 px-6 py-2.5 flex justify-around items-center z-40">
+    <button onclick="switchTab('houses')" id="navHouses" class="flex flex-col items-center gap-1 dark:text-indigo-400 text-indigo-600 font-bold text-[11px] btn-press">
+      <div class="w-12 py-1 rounded-2xl dark:bg-indigo-500/20 dark:border-indigo-500/30 bg-indigo-100 border border-indigo-200 flex items-center justify-center text-base">🏠</div>
       <span>Дома</span>
     </button>
-    <button onclick="switchTab('history')" id="navHistory" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] btn-press">
+    <button onclick="switchTab('history')" id="navHistory" class="flex flex-col items-center gap-1 dark:text-slate-400 text-stone-500 font-semibold text-[11px] btn-press">
       <div class="w-12 py-1 rounded-2xl flex items-center justify-center text-base">📋</div>
       <span>История</span>
     </button>
-    <button onclick="switchTab('stats')" id="navStats" class="flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] btn-press">
+    <button onclick="switchTab('stats')" id="navStats" class="flex flex-col items-center gap-1 dark:text-slate-400 text-stone-500 font-semibold text-[11px] btn-press">
       <div class="w-12 py-1 rounded-2xl flex items-center justify-center text-base">📊</div>
       <span>Статистика</span>
     </button>
@@ -203,17 +252,17 @@
 
   <!-- МОДАЛКА: РАСКИДКА -->
   <div id="flyerModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-md">
-    <div class="card-neo w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/15">
+    <div class="pro-card w-full max-w-sm p-6 rounded-3xl space-y-4 dark:border-white/15 border-stone-300">
       <div>
-        <span class="text-[10px] uppercase font-black tracking-widest text-indigo-400">Раскидка листовок</span>
-        <h3 class="font-black text-xl text-white mt-1" id="modalHouseTitle">ул. Ленина, д. 1</h3>
+        <span class="text-[10px] uppercase font-black tracking-widest dark:text-indigo-400 text-indigo-600">Раскидка листовок</span>
+        <h3 class="font-black text-xl dark:text-white text-stone-900 mt-1" id="modalHouseTitle">ул. Ленина, д. 1</h3>
       </div>
       <div>
-        <label class="text-xs font-bold text-slate-400">Количество листовок:</label>
-        <input type="number" id="flyerCountInput" class="w-full p-3.5 inp-dark rounded-2xl mt-1.5 text-3xl font-black text-center text-indigo-300" value="30">
+        <label class="text-xs font-bold dark:text-slate-400 text-stone-500">Количество листовок:</label>
+        <input type="number" id="flyerCountInput" class="w-full p-3.5 inp-custom rounded-2xl mt-1.5 text-3xl font-black text-center dark:text-indigo-300 text-indigo-600 outline-none" value="30">
       </div>
       <div class="flex gap-2.5 pt-2">
-        <button onclick="closeModals()" class="w-1/2 py-3.5 bg-white/5 border border-white/10 text-slate-300 font-bold text-xs rounded-2xl btn-press">Отмена</button>
+        <button onclick="closeModals()" class="w-1/2 py-3.5 dark:bg-white/5 bg-stone-200 border dark:border-white/10 border-stone-300 dark:text-slate-300 text-stone-700 font-bold text-xs rounded-2xl btn-press">Отмена</button>
         <button onclick="submitFlyers()" class="w-1/2 py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-500 text-white font-extrabold text-xs rounded-2xl shadow-lg shadow-indigo-600/30 btn-press">Раскидать</button>
       </div>
     </div>
@@ -221,24 +270,24 @@
 
   <!-- МОДАЛКА: ЗАЯВКА -->
   <div id="leadModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-md">
-    <div class="card-neo w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/15">
+    <div class="pro-card w-full max-w-sm p-6 rounded-3xl space-y-4 dark:border-white/15 border-stone-300">
       <div>
-        <span class="text-[10px] uppercase font-black tracking-widest text-emerald-400">Новая заявка</span>
-        <h3 class="font-black text-xl text-white mt-1" id="modalLeadHouseTitle">ул. Ленина, д. 1</h3>
+        <span class="text-[10px] uppercase font-black tracking-widest text-emerald-500">Новая заявка</span>
+        <h3 class="font-black text-xl dark:text-white text-stone-900 mt-1" id="modalLeadHouseTitle">ул. Ленина, д. 1</h3>
       </div>
       <div>
-        <label class="text-xs font-bold text-slate-400 mb-1.5 block">Тип услуги:</label>
+        <label class="text-xs font-bold dark:text-slate-400 text-stone-500 mb-1.5 block">Тип услуги:</label>
         <div class="grid grid-cols-2 gap-2">
-          <button type="button" onclick="selectLeadType('ШПД')" id="btnLeadSPD" class="py-3 border-2 rounded-2xl font-black text-xs bg-indigo-500/20 border-indigo-500 text-indigo-300">ШПД</button>
-          <button type="button" onclick="selectLeadType('Пакет')" id="btnLeadPkt" class="py-3 border-2 border-white/10 rounded-2xl font-bold text-xs text-slate-400">Пакет</button>
+          <button type="button" onclick="selectLeadType('ШПД')" id="btnLeadSPD" class="py-3 border-2 rounded-2xl font-black text-xs dark:bg-indigo-500/20 dark:border-indigo-500 dark:text-indigo-300 bg-indigo-50 border-indigo-600 text-indigo-700">ШПД</button>
+          <button type="button" onclick="selectLeadType('Пакет')" id="btnLeadPkt" class="py-3 border-2 dark:border-white/10 border-stone-300 rounded-2xl font-bold text-xs dark:text-slate-400 text-stone-600">Пакет</button>
         </div>
       </div>
       <div>
-        <label class="text-xs font-bold text-slate-400">Квартира / Примечание:</label>
-        <input type="text" id="leadCommentInput" placeholder="кв. 12, перезвонить" class="w-full px-4 py-3 inp-dark rounded-2xl mt-1.5 text-sm font-medium">
+        <label class="text-xs font-bold dark:text-slate-400 text-stone-500">Квартира / Примечание:</label>
+        <input type="text" id="leadCommentInput" placeholder="кв. 12, перезвонить" class="w-full px-4 py-3 inp-custom rounded-2xl mt-1.5 text-sm font-medium outline-none">
       </div>
       <div class="flex gap-2.5 pt-2">
-        <button onclick="closeModals()" class="w-1/2 py-3.5 bg-white/5 border border-white/10 text-slate-300 font-bold text-xs rounded-2xl btn-press">Отмена</button>
+        <button onclick="closeModals()" class="w-1/2 py-3.5 dark:bg-white/5 bg-stone-200 border dark:border-white/10 border-stone-300 dark:text-slate-300 text-stone-700 font-bold text-xs rounded-2xl btn-press">Отмена</button>
         <button onclick="submitLead()" class="w-1/2 py-3.5 bg-gradient-to-r from-emerald-600 to-teal-500 text-white font-extrabold text-xs rounded-2xl shadow-lg shadow-emerald-600/30 btn-press">Сохранить</button>
       </div>
     </div>
@@ -256,6 +305,33 @@
     let selectedLeadType = 'ШПД';
     let allHistory = [];
     let allLeads = [];
+
+    // Инициализация темы из localStorage
+    function applySavedTheme() {
+      const savedTheme = localStorage.getItem('ttk_app_theme') || 'dark';
+      const html = document.documentElement;
+      const meta = document.getElementById('metaThemeColor');
+      const btn = document.getElementById('themeToggleBtn');
+      
+      if (savedTheme === 'light') {
+        html.classList.remove('dark');
+        meta.setAttribute('content', '#f0ebe1');
+        btn.innerText = '☀️';
+      } else {
+        html.classList.add('dark');
+        meta.setAttribute('content', '#090d16');
+        btn.innerText = '🌙';
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const newTheme = isDark ? 'light' : 'dark';
+      localStorage.setItem('ttk_app_theme', newTheme);
+      applySavedTheme();
+    }
+
+    applySavedTheme();
 
     const now = new Date();
     document.getElementById('monthPicker').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -329,30 +405,30 @@
       );
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="text-center text-slate-500 py-12 text-xs font-semibold">Дома не найдены</div>';
+        container.innerHTML = '<div class="text-center dark:text-slate-500 text-stone-400 py-12 text-xs font-semibold">Дома не найдены</div>';
         return;
       }
 
       filtered.forEach(h => {
         const card = document.createElement('div');
-        card.className = "card-neo p-4 rounded-3xl flex flex-col justify-between space-y-3";
+        card.className = "pro-card p-4 rounded-3xl flex flex-col justify-between space-y-3";
         
         const isBlocked = h.isBlocked;
         const statusBadge = isBlocked 
-          ? `<span class="bg-rose-500/15 border border-rose-500/30 text-rose-300 text-[11px] px-3 py-1 rounded-xl font-black">🔒 Блок ${h.daysLeft} дн.</span>`
-          : `<span class="bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[11px] px-3 py-1 rounded-xl font-black">✅ Свободен</span>`;
+          ? `<span class="dark:bg-rose-500/15 dark:border-rose-500/30 dark:text-rose-300 bg-rose-100 border border-rose-200 text-rose-700 text-[11px] px-3 py-1 rounded-xl font-black">🔒 Блок ${h.daysLeft} дн.</span>`
+          : `<span class="dark:bg-emerald-500/15 dark:border-emerald-500/30 dark:text-emerald-300 bg-emerald-100 border border-emerald-200 text-emerald-700 text-[11px] px-3 py-1 rounded-xl font-black">✅ Свободен</span>`;
 
         card.innerHTML = `
           <div class="flex justify-between items-start">
             <div>
-              <div class="font-extrabold text-white text-base tracking-tight leading-snug">ул. ${h.street}, д. ${h.house}</div>
-              <div class="text-xs font-semibold text-slate-400 mt-0.5">План: <strong class="text-indigo-300 font-extrabold">${h.plan} кв.</strong> ${h.agent ? '<span class="text-slate-500">• ' + h.agent + '</span>' : ''}</div>
+              <div class="font-extrabold dark:text-white text-stone-900 text-base tracking-tight leading-snug">ул. ${h.street}, д. ${h.house}</div>
+              <div class="text-xs font-semibold dark:text-slate-400 text-stone-500 mt-0.5">План: <strong class="dark:text-indigo-300 text-indigo-700 font-extrabold">${h.plan} кв.</strong> ${h.agent ? '<span class="dark:text-slate-500 text-stone-400">• ' + h.agent + '</span>' : ''}</div>
             </div>
             ${statusBadge}
           </div>
 
-          <div class="flex gap-2 border-t border-white/5 pt-3">
-            <button onclick="openFlyerModal(${h.rowId})" ${isBlocked ? 'disabled class="w-1/2 py-3 bg-white/5 text-slate-600 rounded-2xl text-xs font-bold cursor-not-allowed"' : 'class="w-1/2 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl text-xs font-extrabold shadow-lg shadow-indigo-600/30 btn-press"'}>
+          <div class="flex gap-2 border-t dark:border-white/5 border-stone-200 pt-3">
+            <button onclick="openFlyerModal(${h.rowId})" ${isBlocked ? 'disabled class="w-1/2 py-3 dark:bg-white/5 bg-stone-200 dark:text-slate-600 text-stone-400 rounded-2xl text-xs font-bold cursor-not-allowed"' : 'class="w-1/2 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-2xl text-xs font-extrabold shadow-lg shadow-indigo-600/30 btn-press"'}>
               📬 Раскидать
             </button>
             <button onclick="openLeadModal(${h.rowId})" class="w-1/2 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-2xl text-xs font-extrabold shadow-lg shadow-emerald-600/30 btn-press">
@@ -369,13 +445,13 @@
       tabs.forEach(t => {
         document.getElementById(`tab${t.charAt(0).toUpperCase() + t.slice(1)}`).classList.add('hidden');
         const nav = document.getElementById(`nav${t.charAt(0).toUpperCase() + t.slice(1)}`);
-        nav.className = "flex flex-col items-center gap-1 text-slate-400 font-semibold text-[11px] btn-press";
+        nav.className = "flex flex-col items-center gap-1 dark:text-slate-400 text-stone-500 font-semibold text-[11px] btn-press";
         nav.querySelector('div').className = "w-12 py-1 rounded-2xl flex items-center justify-center text-base";
       });
 
       const activeNav = document.getElementById(`nav${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
-      activeNav.className = "flex flex-col items-center gap-1 text-indigo-400 font-bold text-[11px] btn-press";
-      activeNav.querySelector('div').className = "w-12 py-1 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-base";
+      activeNav.className = "flex flex-col items-center gap-1 dark:text-indigo-400 text-indigo-600 font-bold text-[11px] btn-press";
+      activeNav.querySelector('div').className = "w-12 py-1 rounded-2xl dark:bg-indigo-500/20 dark:border-indigo-500/30 bg-indigo-100 border border-indigo-200 flex items-center justify-center text-base";
       document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.remove('hidden');
 
       if (tab === 'history' || tab === 'stats') {
@@ -393,23 +469,22 @@
           renderStatsData();
         }
       } catch (e) {
-        console.log('Ошибка при получении аналитики', e);
+        console.log('Ошибка статистики');
       }
-    }
-
-    // Сопоставление с выбранным месяцем
-    function matchesMonth(dateVal, targetMonth) {
-      if (!targetMonth) return true;
-      if (!dateVal) return false;
-      var s = String(dateVal).trim();
-      return s.indexOf(targetMonth) === 0 || s.indexOf(targetMonth) !== -1;
     }
 
     function renderStatsData() {
       const selectedMonth = document.getElementById('monthPicker').value; // "YYYY-MM"
 
-      const filteredHistory = allHistory.filter(h => matchesMonth(h[0], selectedMonth));
-      const filteredLeads = allLeads.filter(l => matchesMonth(l[0], selectedMonth));
+      const filteredHistory = allHistory.filter(h => {
+        if (!selectedMonth) return true;
+        return String(h[0]).indexOf(selectedMonth) !== -1;
+      });
+
+      const filteredLeads = allLeads.filter(l => {
+        if (!selectedMonth) return true;
+        return String(l[0]).indexOf(selectedMonth) !== -1;
+      });
 
       let totalFlyers = 0;
       filteredHistory.forEach(h => totalFlyers += (parseInt(h[4], 10) || 0));
@@ -422,15 +497,15 @@
       // Заявки
       const containerLeads = document.getElementById('monthLeadsList');
       if (filteredLeads.length === 0) {
-        containerLeads.innerHTML = '<div class="text-center text-slate-500 py-4 font-medium">Заявок за этот месяц нет</div>';
+        containerLeads.innerHTML = '<div class="text-center dark:text-slate-500 text-stone-400 py-4 font-medium">Заявок за этот месяц нет</div>';
       } else {
         containerLeads.innerHTML = filteredLeads.map(l => `
           <div class="py-3 flex justify-between items-center">
             <div>
-              <span class="font-extrabold text-white text-xs tracking-tight">ул. ${l[2]}, д.${l[3]}</span> ${l[5] ? '<span class="text-slate-400 font-medium">('+l[5]+')</span>' : ''}
-              <div class="text-[10px] text-slate-500 mt-0.5">${l[1]} • ${l[0]}</div>
+              <span class="font-extrabold dark:text-white text-stone-900 text-xs tracking-tight">ул. ${l[2]}, д.${l[3]}</span> ${l[5] ? '<span class="dark:text-slate-400 text-stone-500 font-medium">('+l[5]+')</span>' : ''}
+              <div class="text-[10px] dark:text-slate-500 text-stone-400 mt-0.5">${l[1]} • ${l[0]}</div>
             </div>
-            <span class="px-3 py-1 rounded-xl text-[10px] font-black ${l[4] === 'ШПД' ? 'bg-indigo-500/20 border border-indigo-500/30 text-indigo-300' : 'bg-purple-500/20 border border-purple-500/30 text-purple-300'}">${l[4]}</span>
+            <span class="px-3 py-1 rounded-xl text-[10px] font-black ${l[4] === 'ШПД' ? 'dark:bg-indigo-500/20 dark:border-indigo-500/30 dark:text-indigo-300 bg-indigo-100 border border-indigo-200 text-indigo-700' : 'dark:bg-purple-500/20 dark:border-purple-500/30 dark:text-purple-300 bg-purple-100 border border-purple-200 text-purple-700'}">${l[4]}</span>
           </div>
         `).join('');
       }
@@ -438,15 +513,15 @@
       // История
       const containerHistory = document.getElementById('historyList');
       if (filteredHistory.length === 0) {
-        containerHistory.innerHTML = '<div class="text-center text-slate-500 py-12 font-semibold text-xs">В этом месяце раскидок еще не было</div>';
+        containerHistory.innerHTML = '<div class="text-center dark:text-slate-500 text-stone-400 py-12 font-semibold text-xs">В этом месяце раскидок еще не было</div>';
       } else {
         containerHistory.innerHTML = filteredHistory.map(h => `
-          <div class="card-neo p-4 rounded-3xl flex justify-between items-center">
+          <div class="pro-card p-4 rounded-3xl flex justify-between items-center">
             <div>
-              <div class="font-black text-white text-sm tracking-tight">ул. ${h[2]}, д. ${h[3]}</div>
-              <div class="text-[10px] text-slate-500 mt-0.5">${h[1]} • ${h[0]}</div>
+              <div class="font-black dark:text-white text-stone-900 text-sm tracking-tight">ул. ${h[2]}, д. ${h[3]}</div>
+              <div class="text-[10px] dark:text-slate-500 text-stone-400 mt-0.5">${h[1]} • ${h[0]}</div>
             </div>
-            <div class="bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 font-black px-3.5 py-1.5 rounded-xl text-xs">
+            <div class="dark:bg-indigo-500/20 dark:border-indigo-500/30 dark:text-indigo-300 bg-indigo-100 border border-indigo-200 text-indigo-700 font-black px-3.5 py-1.5 rounded-xl text-xs">
               ${h[4]} лист.
             </div>
           </div>
@@ -500,8 +575,16 @@
 
     function selectLeadType(type) {
       selectedLeadType = type;
-      document.getElementById('btnLeadSPD').className = type === 'ШПД' ? 'py-3 border-2 rounded-2xl font-black text-xs bg-indigo-500/20 border-indigo-500 text-indigo-300' : 'py-3 border-2 border-white/10 rounded-2xl font-bold text-xs text-slate-400';
-      document.getElementById('btnLeadPkt').className = type === 'Пакет' ? 'py-3 border-2 rounded-2xl font-black text-xs bg-indigo-500/20 border-indigo-500 text-indigo-300' : 'py-3 border-2 border-white/10 rounded-2xl font-bold text-xs text-slate-400';
+      const btnSPD = document.getElementById('btnLeadSPD');
+      const btnPkt = document.getElementById('btnLeadPkt');
+      
+      if (type === 'ШПД') {
+        btnSPD.className = 'py-3 border-2 rounded-2xl font-black text-xs dark:bg-indigo-500/20 dark:border-indigo-500 dark:text-indigo-300 bg-indigo-50 border-indigo-600 text-indigo-700';
+        btnPkt.className = 'py-3 border-2 dark:border-white/10 border-stone-300 rounded-2xl font-bold text-xs dark:text-slate-400 text-stone-600';
+      } else {
+        btnPkt.className = 'py-3 border-2 rounded-2xl font-black text-xs dark:bg-indigo-500/20 dark:border-indigo-500 dark:text-indigo-300 bg-indigo-50 border-indigo-600 text-indigo-700';
+        btnSPD.className = 'py-3 border-2 dark:border-white/10 border-stone-300 rounded-2xl font-bold text-xs dark:text-slate-400 text-stone-600';
+      }
     }
 
     async function submitLead() {
