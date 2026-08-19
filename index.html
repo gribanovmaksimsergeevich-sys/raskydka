@@ -18,7 +18,6 @@
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     
-    /* Премиум стеклянные карточки с градиентной окантовкой */
     .pro-card {
       background: linear-gradient(145deg, rgba(26, 34, 53, 0.85) 0%, rgba(15, 23, 42, 0.9) 100%);
       backdrop-filter: blur(16px);
@@ -59,14 +58,13 @@
     .tap-scale { transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s ease; }
     .tap-scale:active { transform: scale(0.96); }
     
-    /* Скрываем нативный скроллбар для идеального вида */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
   </style>
 </head>
 <body class="bg-[#090d16] text-slate-100 min-h-screen pb-32 selection:bg-indigo-500 selection:text-white">
 
-  <!-- Фоновые неоновые пятна -->
+  <!-- Неоновые фоновые градиенты -->
   <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[350px] h-[250px] bg-indigo-600/15 blur-[120px] rounded-full pointer-events-none -z-10"></div>
   <div class="fixed bottom-10 right-0 w-[250px] h-[250px] bg-purple-600/10 blur-[100px] rounded-full pointer-events-none -z-10"></div>
 
@@ -82,13 +80,13 @@
         <div>
           <div class="flex items-center gap-1.5">
             <h1 class="font-extrabold text-base tracking-tight text-white">Адреска Pro</h1>
-            <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">v4.0</span>
+            <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">v5.0</span>
           </div>
           <p class="text-[10px] text-slate-400 font-medium">Активные продажи & Заявки</p>
         </div>
       </div>
       
-      <button onclick="loadData()" title="Синхронизировать" class="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-sm text-slate-300 shadow-inner tap-scale">
+      <button onclick="loadData(); fetchStats();" title="Синхронизировать" class="w-10 h-10 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-sm text-slate-300 shadow-inner tap-scale">
         🔄
       </button>
     </div>
@@ -98,7 +96,6 @@
     
     <!-- ==================== ВКЛАДКА 1: ДОМА ==================== -->
     <section id="tabHouses" class="space-y-3.5">
-      <!-- Панель управления -->
       <div class="pro-card pro-card-glow p-4 rounded-3xl space-y-3">
         <div>
           <div class="flex justify-between items-center mb-1.5 ml-1">
@@ -118,7 +115,7 @@
       <div id="houseList" class="space-y-3">
         <div class="text-center text-slate-500 py-16">
           <div class="inline-block animate-spin text-3xl mb-3">⚡</div>
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Синхронизация адресной базы...</div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Загрузка адресов...</div>
         </div>
       </div>
     </section>
@@ -218,7 +215,7 @@
 
   </main>
 
-  <!-- Bottom Navigation Bar (Glassmorphic) -->
+  <!-- Нижняя панель навигации -->
   <nav class="fixed bottom-0 left-0 right-0 bg-[#090d16]/85 backdrop-blur-2xl border-t border-white/10 px-6 py-2.5 flex justify-around items-center z-40">
     <button onclick="switchTab('houses')" id="navHouses" class="flex flex-col items-center gap-1 text-indigo-400 font-bold text-[11px] tap-scale">
       <div class="w-12 py-1 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-base shadow-inner">🏠</div>
@@ -236,7 +233,7 @@
 
   <!-- МОДАЛЬНОЕ ОКНО: РАСКИДКА -->
   <div id="flyerModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-md">
-    <div class="pro-card w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/15 animate-in fade-in zoom-in-95 duration-200">
+    <div class="pro-card w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/15">
       <div>
         <span class="text-[10px] uppercase font-black tracking-widest text-indigo-400">Раскидка листовок</span>
         <h3 class="font-black text-xl text-white mt-1" id="modalHouseTitle">ул. Филатова, д. 22</h3>
@@ -254,7 +251,7 @@
 
   <!-- МОДАЛЬНОЕ ОКНО: ЗАЯВКА -->
   <div id="leadModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-end sm:items-center justify-center p-4 backdrop-blur-md">
-    <div class="pro-card w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/15 animate-in fade-in zoom-in-95 duration-200">
+    <div class="pro-card w-full max-w-sm p-6 rounded-3xl space-y-4 border border-white/15">
       <div>
         <span class="text-[10px] uppercase font-black tracking-widest text-emerald-400">Фиксация заявки</span>
         <h3 class="font-black text-xl text-white mt-1" id="modalLeadHouseTitle">ул. Филатова, д. 22</h3>
@@ -290,7 +287,6 @@
     let allHistory = [];
     let allLeads = [];
 
-    // Установка текущего месяца по умолчанию
     const now = new Date();
     document.getElementById('monthPicker').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
@@ -312,6 +308,7 @@
         } catch(e) {}
       }
       loadData();
+      fetchStats();
     }
 
     async function loadData() {
@@ -426,25 +423,21 @@
       }
     }
 
-    // Универсальный парсер для сопоставления с выбранным месяцем (YYYY-MM)
+    // Сопоставление с выбранным месяцем (YYYY-MM)
     function matchesMonth(dateVal, targetMonth) {
       if (!targetMonth) return true;
       if (!dateVal) return false;
       const str = String(dateVal).trim();
-      
-      // Если начинается на YYYY-MM
       if (str.startsWith(targetMonth)) return true;
+      if (str.indexOf(targetMonth) !== -1) return true;
       
-      // Если формат DD.MM.YYYY
       const parts = str.split(/[. :T-]/);
       if (parts.length >= 3) {
-        // DD.MM.YYYY
         if (parts[2].length === 4) {
           const y = parts[2];
           const m = parts[1].padStart(2, '0');
           if (`${y}-${m}` === targetMonth) return true;
         }
-        // YYYY-MM-DD
         if (parts[0].length === 4) {
           const y = parts[0];
           const m = parts[1].padStart(2, '0');
@@ -457,21 +450,18 @@
     function renderStatsData() {
       const selectedMonth = document.getElementById('monthPicker').value; // "YYYY-MM"
 
-      // Фильтрация истории и заявок по выбранному месяцу
       const filteredHistory = allHistory.filter(h => matchesMonth(h[0], selectedMonth));
       const filteredLeads = allLeads.filter(l => matchesMonth(l[0], selectedMonth));
 
-      // Подсчет листовок
       let totalFlyers = 0;
       filteredHistory.forEach(h => {
         totalFlyers += (parseInt(h[4], 10) || 0);
       });
 
-      // Присвоение числовых значений в карточки
-      document.getElementById('statHouses').innerText = filteredHistory.length || 0;
-      document.getElementById('statFlyers').innerText = totalFlyers || 0;
-      document.getElementById('statLeads').innerText = filteredLeads.length || 0;
-      document.getElementById('historyBadgeCount').innerText = filteredHistory.length || 0;
+      document.getElementById('statHouses').innerText = filteredHistory.length;
+      document.getElementById('statFlyers').innerText = totalFlyers;
+      document.getElementById('statLeads').innerText = filteredLeads.length;
+      document.getElementById('historyBadgeCount').innerText = filteredHistory.length;
 
       // Отображение заявок
       const containerLeads = document.getElementById('monthLeadsList');
@@ -510,7 +500,7 @@
 
     async function clearMonthStats() {
       const selectedMonth = document.getElementById('monthPicker').value;
-      if (!confirm(`Вы уверены, что хотите удалить данные за ${selectedMonth}?`)) {
+      if (!confirm(`Вы уверены, что хотите удалить историю и заявки за ${selectedMonth}?`)) {
         return;
       }
 
@@ -574,7 +564,10 @@
           count: count
         })
       });
-      setTimeout(loadData, 1500);
+      setTimeout(() => {
+        loadData();
+        fetchStats();
+      }, 1500);
     }
 
     function selectLeadType(type) {
@@ -603,6 +596,7 @@
         })
       });
       alert('Заявка успешно сохранена!');
+      setTimeout(fetchStats, 1500);
     }
 
     init();
